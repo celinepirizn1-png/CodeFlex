@@ -1,0 +1,7 @@
+body{
+    background-color: white;
+    background: url("imagenes/img.png") no-repeat center center;
+    border: none;
+    background-attachment: fixed;
+    text-align: center;
+}
