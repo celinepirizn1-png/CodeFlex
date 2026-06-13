@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Equipo CodeFlex">
+    <meta name="description" content="Sports Always - Plataforma de gestión de torneos.">
+
+    <link rel="icon" href="img/cup.png" type="image/png">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Sports Always</title>
+</head>
+<body>
+    <header class="topbar">
+        <img id="logo" src="img/cup.png" alt="Logo">
+        <button class="menuIcon" type="button" alt="Abrir menú">
+            <img src="img/MH.png">
+        </button>
+    </header>
+
+    <div class="menuOverlay" data-menu-close hidden></div> <!-- Capa invisible que se muestra al abrir el menú, al hacer clic en ella se cierra el menú -->
+
+    <aside class="sideMenu">
+        <div class="menuHeader">
+            <h2>Menú</h2>
+        </div>
+        <nav class="menuNav" alt="Menú">
+            <a href="#">Inicio</a>
+            <a href="#">pagina2</a>
+            <a href="#">pagina3</a>
+            <a href="#">pagina4</a>
+        </nav>
+        <a class="menuReg" href="#">Registrarse</a>
+    </aside>
+
+    <main>
+        <section class="main">
+          <img id="Jugador" src="img/img.png" alt="Jugador de tenis">
+        </section>
+
+        <section class="statsBar">
+            <div class="statItem">
+                <span class="statNum">120+</span>
+                <span class="statLabel">Torneos activos</span>
+            </div>
+            <div class="statItem">
+                <span class="statNum">3</span>
+                <span class="statLabel">Formatos</span>
+            </div>
+            <div class="statItem">
+                <span class="statNum">500+</span>
+                <span class="statLabel">Participantes</span>
+            </div>
+            <div class="statItem">
+                <span class="statNum">24/7</span>
+                <span class="statLabel">Resultados</span>
+            </div>
+        </section>
+
+        <section>
+            <div class="btn">
+                <a href="torneos.html" class="btnPrimary">Ver torneos</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
