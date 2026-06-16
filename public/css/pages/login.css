@@ -1,0 +1,68 @@
+body{
+    font-family: sans-serif; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    margin: 0; 
+    background: #f5f1eb; 
+}
+
+.auth-card{ 
+    width: min(360px, 100%); 
+    background: #fff; 
+    padding: 28px; 
+    border-radius: 18px; 
+    box-shadow: 0 18px 50px rgba(0,0,0,0.08); 
+}
+
+h1{ 
+    margin-top: 0; 
+    font-size: 1.85rem; 
+    color: #2f291f; 
+}
+
+label{ 
+    display: block; 
+    margin: 16px 0 8px; 
+    color: #4a4339; 
+    font-weight: 600; 
+}
+
+input{ 
+    width: 100%; 
+    padding: 12px 14px; 
+    border: 1px solid #d2c9bf; 
+    border-radius: 12px; 
+    font-size: 0.98rem; 
+}
+
+button{ 
+    width: 100%; 
+    margin-top: 22px; 
+    padding: 14px; 
+    border: 0; 
+    border-radius: 999px; 
+    background: #b96a2c; 
+    color: #fff; 
+    font-size: 1rem; 
+    font-weight: 700; 
+    cursor: pointer; 
+}
+
+button:hover{ 
+    background: #8f4e1c; 
+}
+
+.message{ 
+    margin-top: 14px; 
+    color: #8f4e1c; 
+    font-size: 0.95rem; 
+}
+
+.subtext{ 
+    margin: 12px 0 0; 
+    color: #50463d; 
+    font-size: 0.95rem; 
+}
+

@@ -27,3 +27,28 @@ if (menuButton && menu && overlay) {
         }
     });
 }
+
+const authLink = document.querySelector('.menuReg');
+
+const getAuthState = () => localStorage.getItem('userLoggedIn') === 'true';
+
+const getLinkPrefix = () => {
+    const path = window.location.pathname;
+    if (path.includes('/pages/')) return '';
+    return 'pages/';
+};
+
+const updateAuthLink = () => {
+    if (!authLink) return;
+    const prefix = getLinkPrefix();
+    if (getAuthState()) {
+        authLink.textContent = 'Perfil';
+        authLink.href = `${prefix}perfil.html`;
+    } else {
+        authLink.textContent = 'Registrarse';
+        authLink.href = `${prefix}login.html`;
+    }
+};
+
+updateAuthLink();
+window.addEventListener('storage', updateAuthLink);

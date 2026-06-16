@@ -22,7 +22,7 @@ a{
     pointer-events: none;
 }
 
-#logo {
+#logo{
     width: 60px;
     height: 54px;
     object-fit: contain;
@@ -126,9 +126,7 @@ body.menuOpen #Jugador{
     transform: translateX(-12vw);
 }
 
-/* Estadísticas */
-
-.statsBar {
+.statsBar{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1px;
@@ -137,7 +135,7 @@ body.menuOpen #Jugador{
     border-bottom: 1px solid #e0d8d0;
 }
 
-.statItem {
+.statItem{
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -148,20 +146,20 @@ body.menuOpen #Jugador{
     text-align: center;
 }
 
-.statNum {
+.statNum{
     font-size: 2rem;
     font-weight: 800;
     color: #b96a2c;
     line-height: 1;
 }
 
-.statLabel {
+.statLabel{
     font-size: 0.78rem;
     color: #5a4a3a;
     font-weight: 500;
 }
 
-.btnPrimary {
+.btnVTorneos{
     display: inline-block;
     padding: 12px 28px;
     border-radius: 1000px;
@@ -171,8 +169,8 @@ body.menuOpen #Jugador{
     font-size: 0.95rem;
     transition: background 0.2s, transform 0.15s;
 }
- 
-.btnPrimary:hover {
+
+.btnVTorneos:hover{
     background: #8f4e1c;
     transform: translateY(-1px);
 }
