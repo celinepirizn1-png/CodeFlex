@@ -10,12 +10,29 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Sports Always</title>
 </head>
-<body>
+<body class="light">
     <header class="topbar">
-        <img id="logo" src="img/cup.png" alt="Logo">
-        <button class="menuIcon" type="button" aria-label="Abrir menú">
-            <img src="img/MH.png" alt="">
-        </button>
+        <div class="topbarBrand">
+            <img id="logo" src="img/cup.png" alt="Logo">
+            <span class="brandName">CodeFlex</span>
+        </div>
+
+        <nav class="headerNav" aria-label="Menú principal">
+            <a href="index.html">Inicio</a>
+            <a href="pages/torneos.html">Torneos</a>
+            <a href="pages/crearTorneo.html">Crear torneo</a>
+            <a href="pages/nosotros.html">Nosotros</a>
+        </nav>
+
+        <div class="headerActions">
+            <button class="themeToggle" type="button" aria-label="Activar modo claro" data-theme-toggle>
+                <span class="themeIcon">☀</span>
+            </button>
+            <a class="btn btnText headerCta" href="pages/crearTorneo.html">Crear torneo</a>
+            <button class="menuIcon" type="button" aria-label="Abrir menú">
+                <img src="img/MH.png" alt="">
+            </button>
+        </div>
     </header>
 
     <div class="menuOverlay" data-menu-close hidden></div> <!-- Capa invisible que se muestra al abrir el menú, al hacer clic en ella se cierra el menú -->
@@ -23,6 +40,7 @@
     <aside class="sideMenu">
         <div class="menuHeader">
             <h2>Menú</h2>
+            <button class="menuClose" type="button" aria-label="Cerrar menú" data-menu-close>✕</button>
         </div>
         <nav class="menuNav" aria-label="Menú">
             <a href="index.html">Inicio</a>
@@ -34,35 +52,147 @@
     </aside>
 
     <main>
-        <section class="main">
-          <img id="Jugador" src="img/img.png" alt="Jugador de tenis">
+        <section class="hero">
+            <div class="heroMedia" aria-hidden="true">
+                <img class="heroSlide active" src="img/img.png" alt="" loading="eager">
+                <img class="heroSlide" src="img/img1.png" alt="" loading="lazy">
+                <img class="heroSlide" src="img/prueba.png" alt="" loading="lazy">
+                <img class="heroSlide" src="img/prueba2.png" alt="" loading="lazy">
+                <img class="heroSlide" src="img/prueba3.png" alt="" loading="lazy">
+                <img class="heroSlide" src="img/prueba4.jpg" alt="" loading="lazy">
+            </div>
+
+            <div class="container heroInner">
+                <div class="heroCopy">
+                    <span class="eyebrow">Gestión de torneos, sin planillas</span>
+                    <h1>Tu torneo listo antes del silbatazo inicial.</h1>
+                    <p>Armá cuadros, calendarios y resultados en vivo en minutos. Compartí un enlace y dejá que jugadores, equipos y familias sigan toda la acción.</p>
+
+                    <div class="heroCtaRow">
+                        <a href="pages/crearTorneo.html" class="btn btnPrimary">Crear torneo</a>
+                        <a href="pages/torneos.html" class="btn btnText">Ver torneos</a>
+                    </div>
+
+                    <ul class="heroFlags">
+                        <li>Plan gratuito disponible</li>
+                        <li>Sin tarjeta de crédito</li>
+                        <li>Listo en menos de 2 minutos</li>
+                    </ul>
+                </div>
+
+            </div>
         </section>
 
-        <section class="statsBar">
-            <div class="statItem">
-                <span class="statNum">120+</span>
-                <span class="statLabel">Torneos activos</span>
-            </div>
-            <div class="statItem">
-                <span class="statNum">3</span>
-                <span class="statLabel">Formatos</span>
-            </div>
-            <div class="statItem">
-                <span class="statNum">500+</span>
-                <span class="statLabel">Participantes</span>
-            </div>
-            <div class="statItem">
-                <span class="statNum">24/7</span>
-                <span class="statLabel">Resultados</span>
+        <section class="statsStrip">
+            <div class="container statsRow">
+                <div class="stat">
+                    <span class="statNum">120+</span>
+                    <span class="statLabel">Torneos activos</span>
+                </div>
+                <div class="stat">
+                    <span class="statNum">3</span>
+                    <span class="statLabel">Formatos</span>
+                </div>
+                <div class="stat">
+                    <span class="statNum">500+</span>
+                    <span class="statLabel">Participantes</span>
+                </div>
+                <div class="stat">
+                    <span class="statNum">24/7</span>
+                    <span class="statLabel">Resultados</span>
+                </div>
             </div>
         </section>
 
-        <section>
-            <div class="btn">
-                <a href="pages/torneos.html" class="btnVTorneos">Ver torneos</a>
+        <section class="howItWorks" id="como-funciona">
+            <div class="container">
+                <div class="sectionHead">
+                    <span class="eyebrow">Cómo funciona</span>
+                    <h2>De la idea a la primera fecha, en tres pasos.</h2>
+                </div>
+
+                <div class="steps">
+                    <div class="step">
+                        <div class="stepIcon">↻</div>
+                        <span class="stepNum">01</span>
+                        <h3>Configurá tu torneo</h3>
+                        <p>Sumá equipos o jugadores y elegí el formato: eliminación, liga o suizo.</p>
+                    </div>
+                    <div class="step">
+                        <div class="stepIcon">⌁</div>
+                        <span class="stepNum">02</span>
+                        <h3>Generá la programación</h3>
+                        <p>Definí sedes, días y horarios. Cancha arma los cruces y respeta los descansos.</p>
+                    </div>
+                    <div class="step">
+                        <div class="stepIcon">✕</div>
+                        <span class="stepNum">03</span>
+                        <h3>Cargá resultados y compartí</h3>
+                        <p>Actualizá el marcador desde el celular y todos ven los cambios al instante.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features" id="funciones">
+            <div class="container">
+                <div class="sectionHead">
+                    <span class="eyebrow">Funciones</span>
+                    <h2>Todo lo que necesitás para organizar torneos.</h2>
+                </div>
+
+                <div class="featureGrid">
+                    <div class="featureCard">
+                        <div class="featureIcon">↻</div>
+                        <h3>Formato todos contra todos</h3>
+                        <p>Las tablas se actualizan automáticamente después de cada fecha.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">⌁</div>
+                        <h3>Eliminación directa</h3>
+                        <p>Avanza a los ganadores y actualiza el cuadro en tiempo real.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">☍</div>
+                        <h3>Resultados en vivo</h3>
+                        <p>Comparte un enlace único para que todos sigan desde el teléfono.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="finalCta">
+            <div class="container finalCtaInner">
+                <h2>¿Listo para organizar tu torneo?</h2>
+                <p>Sumate a los organizadores que ya gestionan sus competencias con Cancha.</p>
+                <a href="pages/crearTorneo.html" class="btn btnDark">Empezá tu torneo →</a>
             </div>
         </section>
     </main>
+
+    <footer class="siteFooter">
+        <div class="container footerGrid">
+            <div class="footerBrand">
+                <img id="logoFooter" src="img/cup.png" alt="Logo">
+                <p>Cuadros, calendarios y resultados en vivo — todo en un solo lugar.</p>
+            </div>
+            <div class="footerCol">
+                <h4>Producto</h4>
+                <a href="pages/crearTorneo.html">Crear un torneo</a>
+                <a href="pages/torneos.html">Buscar torneos</a>
+                <a href="#funciones">Funciones</a>
+            </div>
+            <div class="footerCol">
+                <h4>Contacto</h4>
+                <a href="pages/nosotros.html">Nosotros</a>
+                <a href="pages/login.html">Iniciar sesión</a>
+            </div>
+        </div>
+        <div class="container footerBottom">
+            <span>© 2026 Sports Always</span>
+            <span>Hecho con ♥ en Uruguay</span>
+        </div>
+    </footer>
 
     <script src="js/script.js"></script>
 </body>
