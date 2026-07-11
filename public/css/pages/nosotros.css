@@ -1,0 +1,55 @@
+﻿:root {
+    --page-padding-top: 140px;
+}
+
+body {
+    min-height: 100vh;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 350px;
+    width: 100%;
+}
+.pageContent {
+    padding: var(--page-padding-top) 0 80px;
+}
+
+.pageHero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 64px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+.pageHero .eyebrow {
+    margin-bottom: 20px;
+}
+
+.pageHero h1 {
+    font-size: 5vh;
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+
+.pageHero p {
+    max-width: 720px;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+@media (max-width: 980px) {
+    .pageContent {
+        padding-top: 120px;
+    }
+
+    .pageHero {
+        padding: 40px 32px;
+    }
+}
+
+
+

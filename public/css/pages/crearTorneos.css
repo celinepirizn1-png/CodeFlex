@@ -1,0 +1,560 @@
+﻿/* --- MODAL CREAR TORNEO — ESTILO SCORE7 ADAPTADO A CODEFLEX --- */
+
+:root {
+    --page-padding-top: 120px;
+}
+
+.pageContent {
+    padding: var(--page-padding-top) 0 80px;
+    min-height: calc(100vh - var(--page-padding-top));
+}
+
+.modalTorneo {
+    width: 100%;
+    margin: 0 16px;
+    background: #1e1e24;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.16);
+    position: relative;
+    z-index: 1;
+}
+
+body.light .modalTorneo {
+    background: #ffffff;
+    border: 1px solid rgba(81, 69, 117, 0.14);
+}
+
+.panelTorneo {
+    padding: 28px 20px 32px;
+}
+
+@media (min-width: 760px) {
+    .modalTorneo {
+        max-width: 760px;
+        margin: 0 auto;
+    }
+
+    .panelTorneo {
+        padding: 36px 40px 40px;
+    }
+}
+
+.tituloTorneo {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 28px;
+    color: var(--text);
+}
+
+.filaSuperior {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+@media (min-width: 760px) {
+    .filaSuperior {
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 20px;
+    }
+}
+
+.campoTorneo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campoTorneo label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: center;
+}
+
+.sportInputWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.sportInputWrap .authInput {
+    border: 2px solid var(--accent);
+    background: transparent;
+    padding-right: 36px;
+}
+
+.limpiarDeporte {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: color 0.2s;
+}
+
+.limpiarDeporte:hover {
+    color: var(--text);
+}
+
+
+/* --- DROPDOWN CUSTOM DEPORTE --- */
+.desplegable {
+    position: relative;
+    width: 100%;
+}
+
+.botonDesplegable {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 2px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+    min-height: 44px;
+}
+
+.botonDesplegable:hover {
+    box-shadow: 0 0 0 3px rgba(229, 133, 0, 0.15);
+}
+
+.valorDesplegable {
+    flex: 1;
+    font-size: 0.95rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+}
+
+.flechaDesplegable {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.desplegable.open .flechaDesplegable {
+    transform: rotate(180deg);
+}
+
+.limpiarDeporte {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: color 0.2s, background 0.2s;
+    flex-shrink: 0;
+}
+
+.limpiarDeporte:hover {
+    color: var(--text);
+    background: var(--surface-soft);
+}
+
+.listaDesplegable {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 280px;
+    overflow-y: auto;
+    background: #0f0f14;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    padding: 6px 0;
+    z-index: 10;
+    list-style: none;
+    display: none;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.5);
+}
+
+body.light .listaDesplegable {
+    background: #ffffff;
+    border: 1px solid rgba(81, 69, 117, 0.18);
+    box-shadow: 0 12px 32px rgba(81, 69, 117, 0.15);
+}
+
+.desplegable.open .listaDesplegable {
+    display: block;
+}
+
+.listaDesplegable li {
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    color: #e0d8f0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    margin: 2px 6px;
+}
+
+body.light .listaDesplegable li {
+    color: #1a1829;
+}
+
+.listaDesplegable li:hover,
+.listaDesplegable li:focus {
+    background: rgba(229, 133, 0, 0.10);
+    border-color: var(--accent);
+    color: var(--accent-soft);
+    outline: none;
+}
+
+.listaDesplegable li.selected {
+    background: rgba(229, 133, 0, 0.18);
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* Scrollbar del dropdown */
+.listaDesplegable::-webkit-scrollbar {
+    width: 6px;
+}
+.listaDesplegable::-webkit-scrollbar-track {
+    background: transparent;
+}
+.listaDesplegable::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 3px;
+}
+body.light .listaDesplegable::-webkit-scrollbar-thumb {
+    background: rgba(81, 69, 117, 0.25);
+}
+
+
+/* --- DROPDOWNS DE FORMATO --- */
+.desplegableFormato {
+    margin-bottom: 10px;
+}
+
+.desplegableFormato:last-child {
+    margin-bottom: 0;
+}
+
+.botonFormato {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    min-height: 42px;
+}
+
+.botonFormato:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(229, 133, 0, 0.12);
+}
+
+.botonFormato .valorDesplegable {
+    flex: 1;
+    font-size: 0.95rem;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+}
+
+.botonFormato .flechaDesplegable {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.desplegableFormato.open .flechaDesplegable {
+    transform: rotate(180deg);
+}
+
+/* Disabled stage: deshabilitar interacción */
+.etapaInactiva .botonFormato {
+    opacity: 0.35;
+    pointer-events: none;
+    cursor: default;
+}
+
+.etapaInactiva .desplegableFormato.open .listaDesplegable {
+    display: none;
+}
+
+/* Quitar fieldset/legend del CSS anterior ya que no los usamos más */
+.fieldsetFormato,
+.legendFormato {
+    display: none;
+}
+
+/* Etiqueta de formato arriba del trigger, como el legend */
+.desplegableFormato::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+/* Base authInput */
+.authInput {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 1rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    width: 100%;
+    appearance: none;
+}
+
+select.authInput {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23b7aed4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+body.light select.authInput {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c5368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.contador {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.contador input[type="number"]::-webkit-inner-spin-button,
+.contador input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.contador input {
+    border: none;
+    background: transparent;
+    padding: 12px 0;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    flex: 1;
+}
+
+.botonContador {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    padding: 0 16px;
+    cursor: pointer;
+    height: 44px;
+    transition: background-color 0.2s;
+    line-height: 1;
+}
+
+.botonContador:hover {
+    background-color: var(--surface-soft);
+}
+
+/* Format Section */
+.seccionFormato {
+    margin-bottom: 24px;
+}
+
+.etiquetaFormato {
+    display: block;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.filaFormato {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    align-items: start;
+    margin-bottom: 16px;
+}
+
+@media (min-width: 760px) {
+    .filaFormato {
+        grid-template-columns: 140px 1fr;
+        gap: 16px;
+    }
+}
+
+.opcionRadio {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding-top: 10px;
+}
+
+.opcionRadio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.opcionRadio .radioPersonal {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--text-muted);
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.opcionRadio input[type="radio"]:checked + .radioPersonal {
+    border-color: var(--accent);
+}
+
+.opcionRadio input[type="radio"]:checked + .radioPersonal::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.textoRadio {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.ladoSeleccion {
+    transition: opacity 0.2s ease;
+}
+
+.ladoSeleccion.etapaInactiva {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+.formatFieldset {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0 12px 10px;
+    margin: 0 0 10px 0;
+}
+
+.formatLegend {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    padding: 0 6px;
+    font-weight: 500;
+}
+
+.fieldsetFormato .authInput {
+    border: none;
+    background: transparent;
+    padding: 4px 0;
+    width: 100%;
+    font-size: 0.95rem;
+}
+
+.descFormato {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 4px 0 0 0;
+    padding-left: 4px;
+}
+
+.botonCrear {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+/* Fix visibilidad opciones */
+.authField select.authInput {
+    color: var(--text);
+}
+
+.authField select.authInput option {
+    background-color: #ffffff;
+    color: #1a1829;
+}
+
+body:not(.light) .authField select.authInput option {
+    background-color: #201d39;
+    color: #f6f3fc;
+}
+
+/* Responsive */
+@media (max-width: 580px) {
+    .panelTorneo {
+        padding: 28px 20px 32px;
+    }
+
+    .filaSuperior {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .filaFormato {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .opcionRadio {
+        padding-top: 0;
+    }
+}
+
+
+body.modalOpen {
+    overflow: hidden;
+}
+
+
+
+

@@ -1,196 +1,371 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Equipo CodeFlex">
-    <meta name="description" content="Sports Always - Plataforma de gestión de torneos.">
+    <meta name="description" content="CodeFlex - Sistema de Gestión Deportiva Modular. Torneos multideporte simples, rápidos y compartibles.">
 
-    <link rel="icon" href="img/cup.png" type="image/png">
+    <link rel="icon" href="img/favicon-amber.png" type="image/png">
     <link rel="stylesheet" href="css/style.css">
-    <title>Sports Always</title>
+    <title>CodeFlex — Sistema de Gestión Deportiva Modular</title>
 </head>
-<body class="light">
-    <header class="topbar">
+
+<body class="light"> 
+
+    <!-- Modo oscuro o modo claro -->
+
+    <script> 
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.remove('light');
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+                document.body.classList.add('light');
+            }
+        })();
+    </script>
+
+
+
+    <!-- Barra superior de navegación -->
+
+    <header class="topbar"> <!-- Cambiar nombre de la clase -->
         <div class="topbarBrand">
-            <img id="logo" src="img/cup.png" alt="Logo">
-            <span class="brandName">CodeFlex</span>
+            <img id="logo" src="img/cup.png" alt="Logotipo de SportAlways">
+            <span class="brandName">SportAlways</span>
         </div>
 
         <nav class="headerNav" aria-label="Menú principal">
             <a href="index.html">Inicio</a>
             <a href="pages/torneos.html">Torneos</a>
-            <a href="pages/crearTorneo.html">Crear torneo</a>
+            <a href="pages/crearTorneo.html">Crear Torneo</a>
             <a href="pages/nosotros.html">Nosotros</a>
+            <a href="pages/misTorneos.html">Mis torneos</a>
+            <a href="pages/información.html">Información</a>
         </nav>
 
         <div class="headerActions">
-            <button class="themeToggle" type="button" aria-label="Activar modo claro" data-theme-toggle>
-                <span class="themeIcon">☀</span>
+            <button class="themeToggle" type="button" aria-label="Activar modo oscuro" data-theme-toggle>
+                <img class="iconSun" src="img/iconSun.png" alt="" aria-hidden="true">
+                <img class="iconMoon" src="img/iconMoon.png" alt="" aria-hidden="true">
             </button>
-            <a class="btn btnText headerCta" href="pages/crearTorneo.html">Crear torneo</a>
-            <button class="menuIcon" type="button" aria-label="Abrir menú">
-                <img src="img/MH.png" alt="">
+            <button class="btn btnPrimary headerCta" id="openLoginBtn" type="button">Iniciar sesión</button>
+            <button class="menuIcon" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
             </button>
         </div>
     </header>
 
-    <div class="menuOverlay" data-menu-close hidden></div> <!-- Capa invisible que se muestra al abrir el menú, al hacer clic en ella se cierra el menú -->
 
-    <aside class="sideMenu">
-        <div class="menuHeader">
-            <h2>Menú</h2>
-            <button class="menuClose" type="button" aria-label="Cerrar menú" data-menu-close>✕</button>
+    <!-- Contenido principal de la página en modo celular -->
+
+    <div class="menuOverlay" hidden data-menu-close></div>
+    <div class="sideMenu" aria-hidden="true">
+        <div class="sideMenuHeader">
+            <span class="brandName">CodeFlex</span>
+            <button class="btnClose" type="button" aria-label="Cerrar menú" data-menu-close>✕</button>
         </div>
-        <nav class="menuNav" aria-label="Menú">
+
+        <nav class="sideMenuNav" aria-label="Menú móvil">
             <a href="index.html">Inicio</a>
             <a href="pages/torneos.html">Torneos</a>
-            <a href="pages/crearTorneo.html">Crear torneo</a>
+            <a href="pages/crearTorneo.html">Crear Torneo</a>
             <a href="pages/nosotros.html">Nosotros</a>
+            <a href="pages/misTorneos.html">Mis torneos</a>
+            <a href="pages/información.html">Información</a>
+
+            <hr class="menuDivider">
+            <a href="pages/login.html" class="menuReg">Registrarse</a>
         </nav>
-        <a class="menuReg" href="pages/login.html">Registrarse</a>
-    </aside>
+    </div>
 
     <main>
+
+        <!-- Sección de imágenes en modo carrusel -->
+
         <section class="hero">
-            <div class="heroMedia" aria-hidden="true">
-                <img class="heroSlide active" src="img/img.png" alt="" loading="eager">
-                <img class="heroSlide" src="img/img1.png" alt="" loading="lazy">
-                <img class="heroSlide" src="img/prueba.png" alt="" loading="lazy">
-                <img class="heroSlide" src="img/prueba2.png" alt="" loading="lazy">
-                <img class="heroSlide" src="img/prueba3.png" alt="" loading="lazy">
-                <img class="heroSlide" src="img/prueba4.jpg" alt="" loading="lazy">
-            </div>
+            <ul class="heroCarousel">
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/basket.jpg');"></li>
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/futbol.jpg');"></li>
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/volley.png');"></li>
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/tabletennis.png');"></li>
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/mando.png');"></li>
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/ajedrez.jpg');"></li>
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/nadador.jpeg');"></li>
+                <li class="heroSlide" style="background-image: url('img/Menú_Carrusel/taekwondo.jpg');"></li>
+            </ul>
+            
 
-            <div class="container heroInner">
-                <div class="heroCopy">
+            <!-- Inicio -->
+
+            <div class="container heroBox">
+                <div class="heroText">
                     <span class="eyebrow">Gestión de torneos, sin planillas</span>
-                    <h1>Tu torneo listo antes del silbatazo inicial.</h1>
-                    <p>Armá cuadros, calendarios y resultados en vivo en minutos. Compartí un enlace y dejá que jugadores, equipos y familias sigan toda la acción.</p>
-
-                    <div class="heroCtaRow">
-                        <a href="pages/crearTorneo.html" class="btn btnPrimary">Crear torneo</a>
-                        <a href="pages/torneos.html" class="btn btnText">Ver torneos</a>
+                    <h1>Del grupo de WhatsApp al fixture automático.</h1>
+                    <p>Creá fixtures automatizados, gestioná inscripciones y compartí resultados en tiempo real con jugadores y fanáticos.</p>
+                   
+                    <div class="heroBtns">
+                        <a href="pages/crearTorneo.html" class="btn btnPrimary">Crear un torneo gratis</a>
+                        <a href="pages/torneos.html" class="btn btnSecondary">Explorar torneos</a>
                     </div>
 
-                    <ul class="heroFlags">
-                        <li>Plan gratuito disponible</li>
-                        <li>Sin tarjeta de crédito</li>
-                        <li>Listo en menos de 2 minutos</li>
-                    </ul>
-                </div>
-
-            </div>
-        </section>
-
-        <section class="statsStrip">
-            <div class="container statsRow">
-                <div class="stat">
-                    <span class="statNum">120+</span>
-                    <span class="statLabel">Torneos activos</span>
-                </div>
-                <div class="stat">
-                    <span class="statNum">3</span>
-                    <span class="statLabel">Formatos</span>
-                </div>
-                <div class="stat">
-                    <span class="statNum">500+</span>
-                    <span class="statLabel">Participantes</span>
-                </div>
-                <div class="stat">
-                    <span class="statNum">24/7</span>
-                    <span class="statLabel">Resultados</span>
                 </div>
             </div>
         </section>
 
-        <section class="howItWorks" id="como-funciona">
+
+        <!-- Sección de cómo funciona -->
+
+        <section id="como-funciona" class="howSection">
             <div class="container">
-                <div class="sectionHead">
-                    <span class="eyebrow">Cómo funciona</span>
-                    <h2>De la idea a la primera fecha, en tres pasos.</h2>
+                <div class="sectionHeader textCenter">
+                    <span class="eyebrow">Simple de usar</span>
+                    <h2>Tu torneo en 4 pasos</h2>
                 </div>
-
-                <div class="steps">
-                    <div class="step">
-                        <div class="stepIcon">↻</div>
-                        <span class="stepNum">01</span>
-                        <h3>Configurá tu torneo</h3>
-                        <p>Sumá equipos o jugadores y elegí el formato: eliminación, liga o suizo.</p>
+                <div class="howSteps">
+                    <div class="howStep">
+                        <div class="howNumber">1</div>
+                        <h3>Creá el torneo</h3>
+                        <p>Elegí el deporte, el formato y el nombre. Listo en menos de 2 minutos, sin registro obligatorio.</p>
                     </div>
-                    <div class="step">
-                        <div class="stepIcon">⌁</div>
-                        <span class="stepNum">02</span>
-                        <h3>Generá la programación</h3>
-                        <p>Definí sedes, días y horarios. Cancha arma los cruces y respeta los descansos.</p>
+                    <div class="howStep">
+                        <div class="howNumber">2</div>
+                        <h3>Sumá los equipos</h3>
+                        <p>Registrá los participantes manualmente o compartí el link de inscripción directo al grupo.</p>
                     </div>
-                    <div class="step">
-                        <div class="stepIcon">✕</div>
-                        <span class="stepNum">03</span>
-                        <h3>Cargá resultados y compartí</h3>
-                        <p>Actualizá el marcador desde el celular y todos ven los cambios al instante.</p>
+                    <div class="howStep">
+                        <div class="howNumber">3</div>
+                        <h3>Gestioná los partidos</h3>
+                        <p>Ingresá los resultados y CodeFlex actualiza la tabla de posiciones automáticamente.</p>
+                    </div>
+                    <div class="howStep">
+                        <div class="howNumber">4</div>
+                        <h3>Compartí en vivo</h3>
+                        <p>Cada torneo tiene su link público. Jugadores y fanáticos siguen el fixture en tiempo real.</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="features" id="funciones">
-            <div class="container">
-                <div class="sectionHead">
-                    <span class="eyebrow">Funciones</span>
-                    <h2>Todo lo que necesitás para organizar torneos.</h2>
-                </div>
 
-                <div class="featureGrid">
+        <!-- Sección de lo que tiene la página -->
+
+        <section class="featuresGridSection">
+            <div class="container">
+                <div class="sectionHeader textCenter">
+                    <span class="eyebrow">Todo en un solo lugar</span>
+                    <h2>Todo lo que necesitás para organizar torneos</h2>
+                </div>
+                <div class="featuresGrid">
                     <div class="featureCard">
-                        <div class="featureIcon">↻</div>
-                        <h3>Formato todos contra todos</h3>
-                        <p>Las tablas se actualizan automáticamente después de cada fecha.</p>
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        </div>
+                        <h3>Grupos + Playoffs</h3>
+                        <p>Armá fases de grupos y knockouts en un solo torneo. Los mejores avanzan automáticamente.</p>
                     </div>
                     <div class="featureCard">
-                        <div class="featureIcon">⌁</div>
-                        <h3>Eliminación directa</h3>
-                        <p>Avanza a los ganadores y actualiza el cuadro en tiempo real.</p>
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </div>
+                        <h3>Fixture automático</h3>
+                        <p>Definí días, horarios y canchas. El sistema arma el calendario de partidos en segundos.</p>
                     </div>
                     <div class="featureCard">
-                        <div class="featureIcon">☍</div>
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
+                        <h3>Estadísticas de jugadores</h3>
+                        <p>Registrá goles, asistencias, tarjetas y más. Las tablas de goleadores se actualizan solas.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </div>
+                        <h3>Multi-admin</h3>
+                        <p>Sumá colaboradores con roles limitados. Cada uno edita solo lo que le corresponde.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                        </div>
+                        <h3>Branding personalizado</h3>
+                        <p>Subí tu logo y elegí colores. El torneo se ve como tuyo, no genérico.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        </div>
                         <h3>Resultados en vivo</h3>
-                        <p>Comparte un enlace único para que todos sigan desde el teléfono.</p>
+                        <p>Un solo link para que jugadores y espectadores sigan el torneo desde el celular.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                        </div>
+                        <h3>Gestión de participantes</h3>
+                        <p>Agregá, editá o importá equipos y jugadores. Todo centralizado y sin errores.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                        </div>
+                        <h3>Reprogramación segura</h3>
+                        <p>Mové partidos sin romper el fixture. Brackets y tablas se mantienen consistentes.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                        </div>
+                        <h3>Embedding</h3>
+                        <p>Mostrá brackets y tablas en vivo en tu web con un simple código embed.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        </div>
+                        <h3>Tablas personalizables</h3>
+                        <p>Definí puntos, desempates y columnas. Las tablas reflejan tus reglas exactas.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                        </div>
+                        <h3>Inscripción online</h3>
+                        <p>Los equipos se inscriben solos. Vos aprobás las inscripciones manualmente o de forma automática.</p>
+                    </div>
+                    <div class="featureCard">
+                        <div class="featureIcon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                        </div>
+                        <h3>Sin registro obligatorio</h3>
+                        <p>Creá y compartí torneos sin forzar a nadie a crear cuenta. Un link y listo.</p>
                     </div>
                 </div>
             </div>
         </section>
+
+
+        <!-- Sección final para que el usuario inscriba un torneo -->
 
         <section class="finalCta">
             <div class="container finalCtaInner">
                 <h2>¿Listo para organizar tu torneo?</h2>
-                <p>Sumate a los organizadores que ya gestionan sus competencias con Cancha.</p>
+                <p>Armá tu primer torneo en menos de 5 minutos. Sin costo, sin planillas.</p>
                 <a href="pages/crearTorneo.html" class="btn btnDark">Empezá tu torneo →</a>
             </div>
         </section>
+
     </main>
+
+
+    <!-- Sección para autenticación de usuarios -->
+
+    <div class="authOverlay" id="authOverlay" hidden>
+        <div class="authModal" role="dialog" aria-modal="true" aria-label="Autenticación">
+            <button class="authClose" id="authClose" type="button" aria-label="Cerrar">✕</button>
+
+            <!-- Panel login -->
+
+            <div class="authPanel" id="panelLogin">
+                <div class="authHeader">
+                    <img src="img/cup.png" alt="" class="authLogo">
+                    <h2>Iniciar sesión</h2>
+                    <p class="authSub">Bienvenido de vuelta a CodeFlex</p>
+                </div>
+                <div class="authField">
+                    <label for="loginEmail">Correo electrónico</label>
+                    <input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email">
+                </div>
+                <div class="authField">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <button class="btn btnPrimary authSubmit" type="button">Ingresar</button>
+                <p class="authSwitch">¿No tenés cuenta? <button type="button" class="authLink" id="toRegister">Registrarse</button></p>
+            </div>
+
+            <!-- Panel registro -->
+
+            <div class="authPanel authPanelHidden" id="panelRegister">
+                <div class="authHeader">
+                    <img src="img/cup.png" alt="" class="authLogo">
+                    <h2>Crear cuenta</h2>
+                    <p class="authSub">Sumate a CodeFlex gratis</p>
+                </div>
+                <div class="authField">
+                    <label for="regName">Nombre completo</label>
+                    <input type="text" id="regName" placeholder="Tu nombre" autocomplete="name">
+                </div>
+                <div class="authField">
+                    <label for="regEmail">Correo electrónico</label>
+                    <input type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email">
+                </div>
+                <div class="authField">
+                    <label for="regPassword">Contraseña</label>
+                    <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password">
+                </div>
+                <div class="authField">
+                    <label for="regConfirm">Confirmar contraseña</label>
+                    <input type="password" id="regConfirm" placeholder="••••••••" autocomplete="new-password">
+                </div>
+                <button class="btn btnPrimary authSubmit" type="button">Crear cuenta</button>
+                <p class="authSwitch">¿Ya tenés cuenta? <button type="button" class="authLink" id="toLogin">Iniciar sesión</button></p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Información extra sobre nosotros -->
 
     <footer class="siteFooter">
         <div class="container footerGrid">
             <div class="footerBrand">
-                <img id="logoFooter" src="img/cup.png" alt="Logo">
-                <p>Cuadros, calendarios y resultados en vivo — todo en un solo lugar.</p>
+                <span class="brandName">CodeFlex</span>
+                <p>Sistema de Gestión Deportiva Modular. Torneos multideporte simples, rápidos y compartibles.</p>
             </div>
-            <div class="footerCol">
-                <h4>Producto</h4>
-                <a href="pages/crearTorneo.html">Crear un torneo</a>
-                <a href="pages/torneos.html">Buscar torneos</a>
-                <a href="#funciones">Funciones</a>
+
+            <div>
+                <img class="footerLogo" src="img/CodeFlex.png" alt="Logotipo de CodeFlex">
             </div>
+
             <div class="footerCol">
-                <h4>Contacto</h4>
-                <a href="pages/nosotros.html">Nosotros</a>
-                <a href="pages/login.html">Iniciar sesión</a>
+                <h4>Equipo</h4>
+                <div class="footerMember">
+                    <span class="memberName">Aaron Sierra</span>
+                    <span class="memberRole">Diseño · Documentación</span>
+                </div>
+                <div class="footerMember">
+                    <span class="memberName">Bryan Gómez</span>
+                    <span class="memberRole">Backend</span>
+                </div>
+                <div class="footerMember">
+                    <span class="memberName">Celine Píriz</span>
+                    <span class="memberRole">Líder · Frontend</span>
+                </div>
+                <div class="footerMember">
+                    <span class="memberName">Santiago Espárrago</span>
+                    <span class="memberRole">Backend</span>
+                </div>
+            </div>
+
+            <div class="footerCol">
+                <h4>Proyecto</h4>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 4px;">UTU — ITS Arias Balparda</p>
+                <p style="color: var(--text-muted); font-size: 0.95rem;">Uruguay 🇺🇾</p>
             </div>
         </div>
+
         <div class="container footerBottom">
-            <span>© 2026 Sports Always</span>
-            <span>Hecho con ♥ en Uruguay</span>
+            <span>© <span id="year">2026</span> CODEFLEX. Todos los derechos reservados.</span>
+            <span>Hecho con ♥</span>
         </div>
     </footer>
 
