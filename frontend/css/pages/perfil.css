@@ -1,0 +1,250 @@
+/* === PERFIL DE USUARIO === */
+.profileLayout {
+    max-width: 880px;
+}
+
+.profileHeroCard {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+}
+
+.profileAvatarBig,
+.profileAvatarBigInitial {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.profileAvatarBig {
+    object-fit: cover;
+    border: 1px solid var(--border);
+}
+
+.profileAvatarBigInitial {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.profileHeroInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.profileNameRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.profileHeroInfo h1 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.profileNameEditRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 8px 0;
+}
+
+.profileNameEditRow .authInput {
+    max-width: 320px;
+}
+
+.profileEmailStatic {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-top: 6px;
+}
+
+.profileGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+/* === Tarjetas de bloque (mismo lenguaje visual que Detalle de Torneo) === */
+.detalleBlock {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.detalleBlockHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.detalleBlockHeader h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.detalleBlockHint {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+.detalleRow {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.detalleRow:last-of-type {
+    border-bottom: none;
+}
+
+.detalleRowLabel {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.detalleRowValue {
+    font-size: 0.92rem;
+    color: var(--text);
+    text-align: left;
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: break-word;
+}
+
+.detalleBlockActions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.detalleEditBtn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.detalleEditBtn:hover {
+    background: var(--surface-soft);
+    color: var(--accent);
+}
+
+/* Desde 581px cada dato vuelve a etiqueta+valor en una misma fila. */
+@media (min-width: 581px) {
+    .detalleRow {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .detalleRowValue {
+        text-align: right;
+    }
+}
+
+.profileTorneosSummary {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.profileTorneosCount {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -1px;
+}
+
+.profileTorneosLabel {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.profileTorneosLink {
+    width: 100%;
+}
+
+.profileThemeToggle {
+    display: flex;
+    gap: 8px;
+}
+
+.profilePasswordFields {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.profilePasswordSuccess {
+    color: #22c55e;
+    font-size: 0.85rem;
+    margin: -4px 0 12px;
+}
+
+.profileLogoutRow {
+    display: flex;
+    justify-content: center;
+}
+
+/* Desde 581px la tarjeta de perfil se dispone en fila (avatar + datos). */
+@media (min-width: 581px) {
+    .profileHeroCard {
+        flex-direction: row;
+        text-align: left;
+        padding: 32px;
+    }
+
+    .profileNameRow,
+    .profileNameEditRow {
+        justify-content: flex-start;
+    }
+}
+
+/* Desktop: las dos columnas de bloques del perfil. */
+@media (min-width: 981px) {
+    .profileGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

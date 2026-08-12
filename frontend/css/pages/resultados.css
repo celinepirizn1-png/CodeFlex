@@ -1,0 +1,319 @@
+.resultadosLayout {
+    max-width: 880px;
+}
+
+.resultadosHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 32px;
+}
+
+.resultadosHeaderIcon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.resultadosHeaderInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.resultadosHeaderInfo h1 {
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.resultadosChips {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.resultadosBackLink {
+    flex-shrink: 0;
+}
+
+.resultadosSection {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+}
+
+/* === CHAMPION BANNER === */
+.championBanner {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(229, 133, 0, 0.1);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.championBanner[hidden] {
+    display: none;
+}
+
+.championIcon {
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+/* === STANDINGS ===
+   Mobile First: en celular la tabla se reemplaza por tarjetas apiladas
+   (.standingsCards); desde 581px se muestra la tabla completa. */
+.standingsTableWrap {
+    display: none;
+    overflow-x: auto;
+}
+
+.standingsTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.standingsTable th,
+.standingsTable td {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.standingsTable .standingsTeamCol {
+    text-align: left;
+}
+
+.standingsTable td.standingsTeamCol {
+    font-weight: 700;
+    color: var(--text);
+    white-space: normal;
+}
+
+.standingsTable th {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+.standingsTable tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.standingsTable tbody tr:first-child td {
+    color: var(--accent);
+}
+
+.standingsPts {
+    font-weight: 800;
+    color: var(--text);
+}
+
+/* La columna de puntos mantiene el color normal incluso en la fila del líder
+   (que se pinta con el color de acento). Se usa un selector más específico
+   en lugar de !important. */
+.standingsTable tbody tr:first-child td.standingsPts {
+    color: var(--text);
+}
+
+/* === STANDINGS (mobile stacked cards) === */
+.standingsCards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.standingsCard {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+}
+
+.standingsCardRank {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.standingsCard:first-child .standingsCardRank {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.standingsCardBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.standingsCardBody h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.standingsCardStats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.standingsCardStats strong {
+    color: var(--text);
+    margin-right: 3px;
+}
+
+.standingsCardPts strong,
+.standingsCardPts {
+    color: var(--accent);
+}
+
+/* Desde 581px se muestra la tabla y se ocultan las tarjetas. */
+@media (min-width: 581px) {
+    .standingsTableWrap {
+        display: block;
+    }
+
+    .standingsCards {
+        display: none;
+    }
+}
+
+/* === RESULTS === */
+.resultsList {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.resultCard {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    flex-wrap: wrap;
+}
+
+.resultTeams {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+}
+
+.resultScore {
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.resultDate {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+/* Desde 581px las secciones tienen más padding y cada partido va en fila. */
+@media (min-width: 581px) {
+    .resultadosSection {
+        padding: 32px;
+    }
+
+    .resultCard {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+/* === Goleadores (vista pública) === */
+.scorersList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.scorerRow {
+    display: grid;
+    grid-template-columns: 28px 1fr auto auto;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+}
+
+.scorerRank {
+    font-weight: 800;
+    color: var(--accent);
+    text-align: center;
+}
+
+.scorerName {
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scorerTeam {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.scorerGoals {
+    font-weight: 800;
+    white-space: nowrap;
+    color: var(--accent);
+}
+
+.scorerGoalsUnit {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-left: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}

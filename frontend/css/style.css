@@ -1,0 +1,1716 @@
+/* === RESET & ROOT VARIABLES === */
+:root {
+    --bg: #141419;
+    --surface: #201d39;
+    --surface-soft: rgba(81, 69, 117, 0.14);
+    --border: rgba(255, 255, 255, 0.12);
+    --accent: #e58500;
+    --accent-soft: #ffc451;
+    --text: #f6f3fc;
+    --text-muted: #b7aed4;
+    --radius-sm: 14px;
+    --radius-md: 24px;
+    --radius-lg: 32px;
+    --container: 1180px;
+    --page-padding-top: 140px;
+}
+
+body.light {
+    --bg: #f2f0fa;
+    --surface: #ffffff;
+    --surface-soft: rgba(81, 69, 117, 0.11);
+    --border: rgba(81, 69, 117, 0.22);
+    --accent: #d46a00;
+    --accent-soft: #b25300;
+    --text: #1a1829;
+    --text-muted: #5c5368;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* El atributo `hidden` debe ocultar siempre, aunque un `.clase { display: flex }`
+   tenga la misma especificidad. Sin esto, filas/menús marcados como `hidden`
+   (edición de nombre, dropdowns, etc.) se muestran igual. */
+[hidden] {
+    display: none !important;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+}
+
+/* === PULIDO GLOBAL === */
+
+/* Selección de texto acorde a la marca (en vez del azul del sistema). */
+::selection {
+    background: rgba(229, 133, 0, 0.30);
+    color: #fff;
+}
+body.light ::selection {
+    background: rgba(212, 106, 0, 0.22);
+    color: var(--text);
+}
+
+/* Scrollbars finas y acordes al tema (WebKit + Firefox). */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.16) transparent;
+}
+body.light * {
+    scrollbar-color: rgba(81, 69, 117, 0.32) transparent;
+}
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.16);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.28);
+    background-clip: padding-box;
+}
+body.light ::-webkit-scrollbar-thumb {
+    background: rgba(81, 69, 117, 0.30);
+    background-clip: padding-box;
+}
+body.light ::-webkit-scrollbar-thumb:hover {
+    background: rgba(81, 69, 117, 0.45);
+    background-clip: padding-box;
+}
+
+/* Foco de teclado visible y prolijo en todo lo interactivo. */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+/* Respeta a quien prefiere menos movimiento (accesibilidad). */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* === BUTTONS === */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btnPrimary {
+    background-color: var(--accent);
+    color: #ffffff;
+}
+
+.btnPrimary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(229, 133, 0, 0.3);
+}
+
+.btnSecondary {
+    background-color: var(--surface-soft);
+    color: var(--text);
+    border: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+}
+
+.btnSecondary:hover {
+    background-color: var(--border);
+}
+
+.btnText {
+    background: none;
+    color: var(--text);
+}
+
+.btnText:hover {
+    color: var(--accent);
+}
+
+.btnDark {
+    background-color: #141419;
+    color: #ffffff;
+}
+
+.btnDark:hover {
+    background-color: #000000;
+}
+
+.btnDanger {
+    background-color: #e5484d;
+    color: #ffffff;
+}
+
+.btnDanger:hover {
+    background-color: #c8383d;
+}
+
+/* === TOPBAR / NAVBAR — fixed, transparent → frosted on scroll ===
+   Mobile First: la base es la barra compacta de celular; en `min-width`
+   (tablet/desktop) se ensancha el padding y aparece la navegación completa. */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    background: transparent;
+    transition:
+        background-color 0.4s ease,
+        backdrop-filter 0.4s ease,
+        -webkit-backdrop-filter 0.4s ease,
+        box-shadow 0.4s ease,
+        padding 0.3s ease;
+}
+
+.topbar.scrolled {
+    background: rgba(14, 13, 20, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.3);
+    padding: 13px 24px;
+}
+
+body.light .topbar.scrolled {
+    background: rgba(242, 240, 250, 0.88);
+    border-bottom: 1px solid rgba(81, 69, 117, 0.12);
+    box-shadow: 0 4px 24px rgba(81, 69, 117, 0.1);
+}
+
+.topbarLeft {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.detalleCollapseBtn {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.detalleCollapseBtn:hover {
+    background-color: var(--border);
+}
+
+.detalleCollapseBtn[aria-expanded="false"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.topbarBrand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.topbarBrand img {
+    height: 36px;
+    width: auto;
+}
+
+body:not(.light) #logo {
+    filter: brightness(0) invert(1);
+}
+
+.brandName {
+    /* Oculto en celulares muy angostos; reaparece desde 481px (min-width). */
+    display: none;
+    font-weight: 800;
+    font-size: 1.3rem;
+    line-height: 1;
+    letter-spacing: -0.5px;
+}
+
+.headerNav {
+    /* Base móvil: la navegación va en el menú lateral. Desde 981px se muestra. */
+    display: none;
+    align-items: center;
+    gap: 32px;
+}
+
+.headerNav a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.headerNav a:hover {
+    color: var(--accent);
+}
+
+.headerNav button {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.headerNav button:hover {
+    color: var(--accent);
+}
+
+.headerActions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.themeToggle, .menuIcon, .btnClose {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+}
+
+.themeToggle:hover, .menuIcon:hover {
+    background-color: var(--border);
+}
+
+.menuIcon {
+    /* Botón hamburguesa: visible por defecto (móvil), se oculta desde 981px. */
+    display: inline-flex;
+}
+
+.iconSun { display: none; line-height: 1; }
+body:not(.light) .iconSun { display: inline; }
+
+.iconMoon {
+    display: none;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+body.light .iconMoon { display: block; }
+
+/* --- Control de autenticación (login CTA / avatar dropdown) --- */
+.authControl {
+    display: flex;
+    align-items: center;
+}
+
+#openLoginBtn[hidden] {
+    display: none;
+}
+
+/* En celulares el CTA muestra la etiqueta corta ("Entrar"); desde 481px se
+   cambia por la larga ("Iniciar sesión"). */
+.ctaLabelFull {
+    display: none;
+}
+
+.ctaLabelShort {
+    display: inline;
+}
+
+#openLoginBtn {
+    padding: 10px 16px;
+}
+
+.profileControl {
+    position: relative;
+}
+
+.profileControl[hidden] {
+    display: none;
+}
+
+.profileTrigger {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: border-color 0.2s ease;
+}
+
+.profileTrigger:hover {
+    border-color: var(--accent);
+}
+
+.profileAvatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profileAvatar[hidden] {
+    display: none;
+}
+
+.profileInitial {
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 1.1rem;
+}
+
+.profileInitial[hidden] {
+    display: none;
+}
+
+.profileDropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    min-width: 220px;
+    max-width: min(280px, 88vw);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 260;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25);
+}
+
+.profileDropdown[hidden] {
+    display: none;
+}
+
+.profileEmail {
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--text);
+    word-break: break-all;
+    padding: 4px 6px;
+}
+
+.profilePlan {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding: 0 6px 6px;
+}
+
+.profileDropdown a,
+.profileDropdown button {
+    text-align: left;
+    background: none;
+    border: none;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 10px 6px;
+    border-radius: 8px;
+    cursor: pointer;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-family: inherit;
+}
+
+.profileDropdown a:hover,
+.profileDropdown button:hover {
+    background: var(--surface-soft);
+    color: var(--accent);
+}
+
+/* Desde 481px (móviles grandes / tablets) el header recupera la marca textual
+   y el CTA largo. */
+@media (min-width: 481px) {
+    .brandName {
+        display: inline-block;
+    }
+
+    .headerActions {
+        gap: 16px;
+    }
+
+    .ctaLabelFull {
+        display: inline;
+    }
+
+    .ctaLabelShort {
+        display: none;
+    }
+
+    #openLoginBtn {
+        padding: 12px 24px;
+    }
+}
+
+/* Desde 981px (desktop) se ensancha el padding y aparece la nav horizontal,
+   ocultando el botón hamburguesa. */
+@media (min-width: 981px) {
+    .topbar {
+        padding: 20px 48px;
+    }
+
+    .topbar.scrolled {
+        padding: 13px 48px;
+    }
+
+    .menuIcon {
+        display: none;
+    }
+
+    .headerNav {
+        display: flex;
+    }
+}
+
+/* === MOBILE SIDE MENU === */
+.menuOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 150;
+}
+
+.sideMenu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 320px;
+    max-width: 85vw;
+    height: 100vh;
+    background: var(--surface);
+    border-left: 1px solid var(--border);
+    padding: 32px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.menuOpen .sideMenu {
+    transform: translateX(0);
+}
+
+.sideMenuHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 48px;
+}
+
+.sideMenuNav {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sideMenuNav a {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.sideMenuNav button {
+    color: var(--text);
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.menuDivider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 12px 0;
+}
+
+/* Selector con la especificidad necesaria para ganarle a `.sideMenuNav button`
+   sin recurrir a !important. */
+.sideMenuNav .menuReg {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* === HERO ===
+   Base móvil: alto automático y padding reducido. Desde 981px pasa a ocupar
+   toda la altura de la pantalla (min-height: 100vh). */
+.hero {
+    position: relative;
+    min-height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 80px;
+    padding-bottom: 60px;
+    overflow: hidden;
+}
+
+body.light .hero {
+    background: linear-gradient(150deg, #e9e4f8 0%, #f2f0fa 55%, #f5efe6 100%);
+}
+
+.heroCarousel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.heroCarousel::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(150deg, rgba(20, 20, 25, 0.55) 0%, rgba(32, 29, 57, 0.42) 55%, rgba(20, 20, 25, 0.6) 100%);
+}
+
+body.light .heroCarousel::after {
+    background: linear-gradient(150deg, rgba(242, 240, 250, 0.78) 0%, rgba(242, 240, 250, 0.62) 55%, rgba(255, 196, 120, 0.42) 100%);
+}
+
+.heroSlide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0;
+    filter: none;
+    transition: opacity 1s ease-in-out;
+}
+
+.heroSlide.active {
+    opacity: 0.34;
+}
+
+body.light .heroSlide.active {
+    opacity: 0.95;
+    filter: none;
+}
+
+/* Cada slide del carrusel del hero apunta a una imagen de un deporte distinto.
+   Se definen como clases modificadoras (no como estilo en línea) para mantener
+   toda la presentación en la hoja de estilos. */
+.heroSlide--basket { background-image: url('../img/basket.jpg'); }
+.heroSlide--futbol { background-image: url('../img/futbol.jpg'); }
+.heroSlide--volley { background-image: url('../img/volley.png'); }
+.heroSlide--tenismesa { background-image: url('../img/tabletennis.png'); }
+.heroSlide--esports { background-image: url('../img/mando.png'); }
+.heroSlide--ajedrez { background-image: url('../img/ajedrez.jpg'); }
+.heroSlide--natacion { background-image: url('../img/nadador.jpeg'); }
+.heroSlide--taekwondo { background-image: url('../img/taekwondo.jpg'); }
+
+.heroInner {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+    align-items: center;
+    width: 100%;
+}
+
+.heroCopy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.eyebrow {
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-soft);
+    margin-bottom: 16px;
+}
+
+.heroCopy h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0 0 20px 0;
+    letter-spacing: -1.5px;
+}
+
+.heroCopy p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    margin: 0 0 36px 0;
+    max-width: 540px;
+}
+
+.heroActionsGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+}
+
+/* Tablet: el título crece un paso antes del salto a desktop. */
+@media (min-width: 581px) {
+    .heroCopy h1 {
+        font-size: 2.6rem;
+    }
+}
+
+/* Desktop: hero a pantalla completa, dos columnas y textos alineados a la izq. */
+@media (min-width: 981px) {
+    .hero {
+        min-height: 100vh;
+        padding-top: 100px;
+        padding-bottom: 0;
+    }
+
+    .heroInner {
+        grid-template-columns: 1.2fr 0.8fr;
+        text-align: left;
+        gap: 56px;
+    }
+
+    .heroCopy {
+        align-items: stretch;
+    }
+
+    .heroCopy h1 {
+        font-size: 3.5rem;
+    }
+
+    .heroActionsGroup {
+        justify-content: flex-start;
+    }
+}
+
+/* === SECTION HEADER (shared by How It Works + Formats) === */
+.sectionHeader {
+    margin-bottom: 64px;
+    max-width: 600px;
+}
+
+.textCenter {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sectionHeader h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 8px 0 0 0;
+}
+
+/* === CÓMO FUNCIONA === */
+.howSection {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+}
+
+.howSteps {
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    justify-items: stretch;
+    gap: 40px;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.howStep {
+    position: relative;
+}
+
+.howNumber {
+    width: 48px;
+    height: 48px;
+    background-color: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+.howStep h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+.howStep p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 0.97rem;
+    margin: 0;
+}
+
+/* Tablet: 2 columnas. Desktop: 4 columnas. */
+@media (min-width: 581px) {
+    .howSteps {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 981px) {
+    .howSteps {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* === FORMATOS TABS === */
+.featuresSection {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+    background-color: var(--surface-soft);
+}
+
+.tabContainer {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.tabButtons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.tabBtn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 12px 24px;
+    min-height: 44px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-sm);
+}
+
+.tabBtn:hover {
+    color: var(--text);
+    background-color: var(--surface-soft);
+}
+
+.tabBtn.active {
+    color: #ffffff;
+    background-color: var(--accent);
+}
+
+.tabContent {
+    position: relative;
+}
+
+.tabPanel {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+}
+
+.tabPanel.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tabPanel h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.tabPanel p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* === TOURNAMENT CARDS (shared by Mis Torneos + Torneos) === */
+.torneosToolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.torneosFilters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filterChip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 7px 18px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filterChip:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.filterChip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.torneosCount {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.torneosGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+.showMoreTorneosWrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.showMoreTorneosWrap[hidden] {
+    display: none;
+}
+
+.showMoreTorneosBtn {
+    min-height: 44px;
+}
+
+.torneoCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    cursor: pointer;
+    display: block;
+    color: var(--text);
+    text-decoration: none;
+}
+
+/* Enlace que ocupa toda la tarjeta-artículo (patrón "card as link"): permite que
+   <article> sea el contenedor semántico y el <a> aporte la navegación. */
+.torneoCardLink {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.torneoCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    border-color: var(--accent);
+}
+
+.torneoCardTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.torneoSportTag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--accent-soft);
+}
+
+.torneoBadge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid;
+}
+
+.torneoBadge.activo {
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.08);
+}
+
+.torneoBadge.borrador {
+    color: var(--text-muted);
+    border-color: var(--border);
+    background: var(--surface-soft);
+}
+
+.torneoBadge.finalizado {
+    color: var(--accent-soft);
+    border-color: rgba(229, 133, 0, 0.35);
+    background: rgba(229, 133, 0, 0.08);
+}
+
+.torneoCard h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+}
+
+.torneoCardMeta {
+    display: flex;
+    gap: 16px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Desde 981px la grilla de torneos pasa a 3 columnas. */
+@media (min-width: 981px) {
+    .torneosGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* === FINAL CTA === */
+.finalCta {
+    padding: 72px 0;
+    background-color: var(--bg);
+}
+
+.finalCtaInner {
+    background-color: var(--accent);
+    color: #ffffff;
+    padding: 40px 20px;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.finalCtaInner h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    margin: 0 0 16px 0;
+    letter-spacing: -1px;
+}
+
+.finalCtaInner p {
+    font-size: 1.2rem;
+    margin: 0 0 32px 0;
+    opacity: 0.9;
+    max-width: 500px;
+}
+
+/* Tablet: se agranda el padding interno del bloque de CTA. */
+@media (min-width: 581px) {
+    .finalCtaInner {
+        padding: 48px 24px;
+    }
+}
+
+/* Desktop: padding y título a tamaño completo. */
+@media (min-width: 981px) {
+    .finalCta {
+        padding: 100px 0;
+    }
+
+    .finalCtaInner {
+        padding: 64px;
+    }
+
+    .finalCtaInner h2 {
+        font-size: 2.8rem;
+    }
+}
+
+/* === FOOTER === */
+.siteFooter {
+    background-color: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 64px 0 32px 0;
+}
+
+.footerGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+}
+
+.footerBrand p {
+    color: var(--text-muted);
+    line-height: 1.5;
+    max-width: 280px;
+    margin-top: 12px;
+}
+
+.footerCol h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin: 0 0 24px 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+}
+
+.footerCol a {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.footerCol a:hover {
+    color: var(--text);
+}
+.footerCol button {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.footerCol button:hover {
+    color: var(--text);
+}
+
+/* Datos institucionales del proyecto dentro del footer (texto tenue, no enlaces). */
+.footerNote {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+/* Marca del header cuando actúa como enlace al inicio (páginas internas). */
+.brandLink {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.footerBottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.footerMember {
+    margin-bottom: 14px;
+}
+
+.memberName {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.memberRole {
+    display: block;
+    color: var(--accent-soft);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+/* Tablet: 2 columnas. Desktop: marca ancha + 3 columnas de links. */
+@media (min-width: 581px) {
+    .footerGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 981px) {
+    .footerGrid {
+        grid-template-columns: 1.5fr repeat(3, 1fr);
+        gap: 48px;
+    }
+}
+
+/* === SHARED PAGE HEADER / EMPTY STATE (inner pages) === */
+.pageContent {
+    padding: var(--page-padding-top) 0 80px;
+}
+
+.pageSection {
+    padding: 56px 0 100px;
+}
+
+.pageHero {
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+    display: flex;
+    align-items: center;
+    /* .pageContent ya reserva var(--page-padding-top) arriba para
+       despejar el navbar fijo; sin este margen negativo, el hero
+       queda con el doble de espacio vacío antes del navbar. */
+    margin-top: calc(-1 * var(--page-padding-top));
+    padding: 100px 0 40px;
+}
+
+.pageHero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.pageHero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(150deg, rgba(20, 20, 25, 0.74) 0%, rgba(32, 29, 57, 0.62) 55%, rgba(20, 20, 25, 0.8) 100%);
+}
+
+body.light .pageHero::after {
+    background: linear-gradient(150deg, rgba(242, 240, 250, 0.9) 0%, rgba(242, 240, 250, 0.76) 55%, rgba(255, 196, 120, 0.55) 100%);
+}
+
+.pageHero--torneos::before { background-image: url('../img/futbol.jpg'); }
+.pageHero--crear::before { background-image: url('../img/basket.jpg'); }
+.pageHero--info::before { background-image: url('../img/volley.png'); }
+.pageHero--mistorneos::before { background-image: url('../img/tabletennis.png'); }
+.pageHero--panel::before { background-image: url('../img/ajedrez.jpg'); }
+
+.pageHeroInner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.pageHeroTitle {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0 0 8px 0;
+}
+
+.pageHeroSub {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin: 0;
+    max-width: 520px;
+}
+
+.emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.emptyState[hidden] {
+    display: none;
+}
+
+.emptyStateIcon {
+    width: 72px;
+    height: 72px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+    color: var(--accent);
+}
+
+.emptyState h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0 0 10px 0;
+}
+
+.emptyState p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 32px 0;
+    max-width: 380px;
+}
+
+/* Desde 581px la cabecera pone título y acción en fila. */
+@media (min-width: 581px) {
+    .pageHeroInner {
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+/* Desktop: más aire y título más grande. */
+@media (min-width: 981px) {
+    .pageHero {
+        padding: 160px 0 56px;
+    }
+
+    .pageHeroTitle {
+        font-size: 2.3rem;
+    }
+}
+
+/* === CONFIRM MODAL (genérico, reutilizable) === */
+.confirmOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    animation: overlayIn 0.25s ease forwards;
+}
+
+.confirmOverlay[hidden] {
+    display: none;
+}
+
+.confirmModal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+}
+
+.confirmModal h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.confirmModal p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.confirmActions {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.confirmActions .btn {
+    width: 100%;
+}
+
+/* Desde 581px los botones del modal vuelven a fila y a ancho automático. */
+@media (min-width: 581px) {
+    .confirmActions {
+        flex-direction: row;
+    }
+
+    .confirmActions .btn {
+        width: auto;
+    }
+}
+
+/* === AUTH MODAL === */
+/* Base móvil: el modal de autenticación entra como panel inferior (bottom sheet).
+   Desde 581px pasa a ser un modal centrado clásico. */
+.authOverlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+    animation: overlayIn 0.25s ease forwards;
+    overflow-y: auto;
+}
+
+.authOverlay[hidden] {
+    display: none;
+}
+
+@keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.authModal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding: 32px 24px 48px;
+    width: 100%;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+    animation: modalInMobile 0.35s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: scale(0.92) translateY(12px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes modalInMobile {
+    from { opacity: 0; transform: translateY(60px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.authClose {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.authClose:hover {
+    color: var(--text);
+    background: var(--border);
+}
+
+.authHeader {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.authLogo {
+    height: 48px;
+    width: auto;
+    margin-bottom: 16px;
+    filter: none;
+}
+
+body:not(.light) .authLogo {
+    filter: brightness(0) invert(1);
+}
+
+.authHeader h2 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+}
+
+.authSub {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.authField {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.authField label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.authField input {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 1rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    font-family: inherit;
+    width: 100%;
+}
+
+.authField input::placeholder {
+    color: var(--text-muted);
+}
+
+.authField input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(229, 133, 0, 0.15);
+}
+
+.authSubmit {
+    width: 100%;
+    margin-top: 8px;
+    padding: 14px;
+    font-size: 1rem;
+}
+
+.authSwitch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.authLink {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+    transition: opacity 0.2s ease;
+    font-family: inherit;
+}
+
+.authLink:hover {
+    opacity: 0.75;
+}
+
+.authError {
+    color: #e5484d;
+    font-size: 0.85rem;
+    margin: -8px 0 12px;
+}
+
+.authError[hidden] {
+    display: none;
+}
+
+.authDivider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 16px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+
+.authDivider::before,
+.authDivider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.googleBtnSlot {
+    display: flex;
+    justify-content: center;
+}
+
+.authPanel {
+    display: block;
+}
+
+.authPanelHidden {
+    display: none;
+}
+
+.authInput {
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    font-size: 1rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    width: 100%;
+    appearance: none;
+}
+
+.authInput::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
+select.authInput {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23b7aed4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+body.light select.authInput {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235c5368' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.authField select.authInput {
+    color: var(--text);
+}
+
+.authField select.authInput option {
+    background-color: #ffffff;
+    color: #1a1829;
+}
+
+body:not(.light) .authField select.authInput option {
+    background-color: #201d39;
+    color: #f6f3fc;
+}
+
+body.modalOpen {
+    overflow: hidden;
+}
+
+/* Desde 581px el modal se centra en pantalla con su ancho acotado. */
+@media (min-width: 581px) {
+    .authOverlay {
+        padding: 24px;
+        align-items: center;
+    }
+
+    .authModal {
+        border-radius: var(--radius-lg);
+        max-width: 420px;
+        padding: 40px;
+        max-height: none;
+        overflow-y: visible;
+        animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+}

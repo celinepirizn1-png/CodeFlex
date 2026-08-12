@@ -1,0 +1,75 @@
+/* === BÚSQUEDA Y FILTROS ===
+   Mobile First: en celular los filtros se apilan; desde 581px van en fila. */
+.torneosSearchBar {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.torneosSearchField {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+}
+
+.torneosSearchField svg {
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.torneosSearchField input {
+    width: 100%;
+    min-height: 44px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px 12px 44px;
+    font-size: 0.95rem;
+    color: var(--text);
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.torneosSearchField input::placeholder {
+    color: var(--text-muted);
+}
+
+.torneosSearchField input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(229, 133, 0, 0.15);
+}
+
+.torneosSelectFilters {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.torneosSelectFilters select {
+    width: 100%;
+    min-width: 170px;
+    min-height: 44px;
+}
+
+@media (min-width: 581px) {
+    .torneosSearchBar {
+        flex-direction: row;
+    }
+
+    .torneosSelectFilters {
+        flex-direction: row;
+    }
+
+    .torneosSelectFilters select {
+        width: auto;
+    }
+}

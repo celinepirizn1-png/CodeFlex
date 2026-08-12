@@ -1,0 +1,93 @@
+/* === FEATURES GRID === */
+.featuresGridSection {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.featuresGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+.featureCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.featureCard:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    border-color: var(--accent);
+}
+
+.featureCard[hidden] {
+    display: none;
+}
+
+.featureIcon {
+    width: 48px;
+    height: 48px;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    margin-bottom: 20px;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.featureCard:hover .featureIcon {
+    background: rgba(229, 133, 0, 0.10);
+    border-color: var(--accent);
+}
+
+.featureCard h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: var(--text);
+}
+
+.featureCard p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.showMoreWrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.showMoreWrap[hidden] {
+    display: none;
+}
+
+.showMoreBtn {
+    min-height: 44px;
+}
+
+/* Tablet: 2 columnas y más padding en las tarjetas. Desktop: 3 columnas. */
+@media (min-width: 581px) {
+    .featuresGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .featureCard {
+        padding: 32px;
+    }
+}
+
+@media (min-width: 981px) {
+    .featuresGrid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

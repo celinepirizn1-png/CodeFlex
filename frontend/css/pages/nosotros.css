@@ -1,0 +1,187 @@
+body {
+    min-height: 100vh;
+}
+
+/* === LOGO === */
+.logo {
+    display: block;
+    margin: 0 auto;
+    max-width: 350px;
+    width: 100%;
+}
+
+/* === ABOUT HERO === */
+.aboutHero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+.aboutHero .eyebrow {
+    margin-bottom: 20px;
+}
+
+.aboutHero h1 {
+    font-size: 5vh;
+    line-height: 1.1;
+    margin-bottom: 16px;
+}
+
+.aboutHero p {
+    max-width: 720px;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+/* Desktop: el hero de "Nosotros" recupera el padding amplio. */
+@media (min-width: 981px) {
+    .aboutHero {
+        padding: 64px;
+    }
+}
+
+/* === SECCIONES (valores / equipo) === */
+.aboutSection {
+    margin-top: 72px;
+}
+
+.aboutSection .sectionHeader {
+    margin-bottom: 40px;
+}
+
+.aboutSection .sectionHeader h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-top: 8px;
+}
+
+/* === VALORES === */
+.aboutValues {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+.aboutValueCard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.aboutValueIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 18px;
+}
+
+.aboutValueCard h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.aboutValueCard p {
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* === EQUIPO === */
+.aboutTeamGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+}
+
+.teamCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 32px 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+.teamAvatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.teamCardName {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.teamCardRole {
+    font-size: 0.85rem;
+    color: var(--accent-soft);
+    font-weight: 600;
+}
+
+/* === CTA FINAL === */
+.aboutCta {
+    margin-top: 72px;
+    text-align: center;
+    background: var(--surface-soft);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 56px 32px;
+}
+
+.aboutCta h2 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+
+.aboutCta p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 28px;
+}
+
+/* Desde 481px el equipo pasa a 2 columnas. */
+@media (min-width: 481px) {
+    .aboutTeamGrid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop: valores en 3 columnas y equipo en 4. */
+@media (min-width: 981px) {
+    .aboutValues {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .aboutTeamGrid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
