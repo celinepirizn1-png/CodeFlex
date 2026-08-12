@@ -1,9 +1,0 @@
-acá e pone codigo en caso de que no esperas de que funcione algo lo copias y cualquier cosa lo restauras despues 
-
-body:not(.light) .iconSun {
-    display: inline;
-}
-
-body.light .iconMoon {
-    display: block;
-}
