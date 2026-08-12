@@ -24,20 +24,26 @@ Instituto Tecnológico Superior "Arias - Balparda" (UTU) - 2026
 - Despliegue: Docker (entrega final)
 
 ## Estructura del proyecto
+## Estructura del proyecto
+
+```
 codeflex-sgdm/
 ├── backend/
-│ ├── config/ # Conexión a BD y configuración
-│ ├── controllers/ # Lógica de negocio
-│ ├── models/ # Clases POO (Usuario, Torneo, etc)
-│ ├── routes/ # Rutas y endpoints
-│ └── utils/ # Validaciones y helpers
+│   ├── config/          # Conexión a BD y configuración
+│   ├── controllers/     # Lógica de negocio
+│   ├── models/          # Clases POO (Usuario, Torneo, etc)
+│   ├── routes/          # Rutas y endpoints
+│   └── utils/           # Validaciones y helpers
 ├── frontend/
-│ ├── css/
-│ ├── js/
-│ ├── img/
-│ └── pages/
+│   ├── css/
+│   ├── js/
+│   ├── img/
+│   └── pages/
 ├── database/
-│ ├── scripts/ # DCL, usuarios de BD
-│ └── migrations/ # Modelo relacional (.sql)
-├── docs/ # Documentación funcional/técnica
+│   ├── scripts/         # DCL, usuarios de BD
+│   └── migrations/      # Modelo relacional (.sql)
+├── server/
+│   └── scripts/         # Scripts bash de AlmaLinux
+├── docs/                # Documentación funcional/técnica
 └── README.md
+```
