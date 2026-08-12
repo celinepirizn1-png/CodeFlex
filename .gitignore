@@ -1,0 +1,24 @@
+# Config sensible
+backend/config/database.php
+backend/config/.env
+.env
+
+# Dependencias (si usan Composer más adelante)
+/vendor/
+composer.lock
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Logs
+*.log
+error_log
+
+# Archivos temporales
+*.tmp
+*.bak
