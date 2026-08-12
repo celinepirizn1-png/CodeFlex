@@ -47,3 +47,30 @@ codeflex-sgdm/
 ├── docs/                # Documentación funcional/técnica
 └── README.md
 ```
+
+## Módulos funcionales
+
+- Usuarios y autenticación (roles: administrador, organizador, participante, público)
+- Gestión de participantes y equipos
+- Torneos: liga, eliminación directa, sistema suizo
+- Registro y consulta de resultados
+- Panel de administración
+- Consulta pública de calendarios y posiciones
+
+## Instalación (en desarrollo)
+
+git clone https://github.com/TheCirax091/CODEFLEX.git
+cd CODEFLEX
+
+Instrucciones de configuración de base de datos y servidor se agregarán conforme avance el desarrollo.
+
+## Entregas
+
+- Primera entrega: 27 de julio
+- Segunda entrega: 14 de septiembre
+- Entrega final: 23 de octubre
+- Defensa: 3-6 de noviembre
+
+## Documentación
+
+La documentación funcional, técnica, de seguridad y manuales de usuario se encuentra en la carpeta docs/.
