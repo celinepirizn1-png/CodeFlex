@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Resultados y posiciones del torneo.">
+    <link rel="icon" href="../../img/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/pages/resultados.css">
+    <title>Resultados | CodeFlex</title>
+</head>
+<body class="light">
+    <header class="topbar">
+        <div class="topbarBrand">
+            <img id="logo" src="../../img/cup.png" alt="Logotipo de CodeFlex">
+            <span class="brandName">SportsAlways</span>
+        </div>
+        <nav class="headerNav" aria-label="Menú principal">
+            <a href="../nologin/inicio.html">Inicio</a>
+            <a href="torneos.html">Torneos</a>
+            <a href="crearTorneo.html">Crear torneo</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="informacion.html">Información</a>
+        </nav>
+        <div class="headerActions">
+            <button class="themeToggle" type="button" aria-label="Activar modo oscuro" data-theme-toggle>
+                <span class="iconSun" aria-hidden="true">☀</span>
+                <img class="iconMoon" src="../../img/icon-moon.png" alt="" aria-hidden="true">
+            </button>
+            <a class="btn btnSecondary" href="torneos.html">Volver a torneos</a>
+        </div>
+    </header>
+
+    <main class="pageContent">
+        <div class="container emptyState" id="notFoundState" hidden>
+            <h2>No encontramos este torneo</h2>
+            <p>Puede que el torneo haya sido eliminado o que el enlace esté incompleto.</p>
+            <a href="torneos.html" class="btn btnPrimary">Volver a Torneos</a>
+        </div>
+
+        <div class="container resultadosLayout" id="resultadosLayout" hidden>
+            <div class="resultadosHeader">
+                <div class="resultadosHeaderIcon" id="resIcon">🏆</div>
+                <div class="resultadosHeaderInfo">
+                    <h1 id="resName">Torneo</h1>
+                    <div class="resultadosChips">
+                        <span class="detalleChip" id="resSportChip"></span>
+                        <span class="detalleChip" id="resFormatChip"></span>
+                    </div>
+                </div>
+                <a class="btn btnSecondary resultadosBackLink" id="resBackLink" href="detalleTorneo.html">Panel del torneo</a>
+            </div>
+            <section class="resultadosSection">
+                <div class="detalleBlockHeader"><h2 id="standingsTitle">Posiciones</h2></div>
+                <div class="championBanner" id="resChampion" hidden></div>
+                <div id="standingsWrap" hidden>
+                    <div class="standingsTableWrap"><table class="standingsTable"><thead><tr><th>Equipo</th><th>PJ</th><th>G</th><th>E</th><th>P</th><th>Pts</th></tr></thead><tbody id="standingsBody"></tbody></table></div>
+                    <div class="standingsCards" id="standingsCards"></div>
+                </div>
+                <p class="detalleBlockHint" id="standingsEmpty" hidden>Todavía no hay partidos jugados para calcular la tabla.</p>
+            </section>
+            <section class="resultadosSection">
+                <div class="detalleBlockHeader"><h2>Resultados</h2></div>
+                <div class="resultsList" id="resultsList"></div>
+                <div class="emptyState resultsEmptyState" id="resultsEmpty" hidden>
+                    <h2>Aún no hay resultados cargados</h2>
+                    <p>Cuando se juegue el primer partido, los resultados aparecerán acá.</p>
+                </div>
+            </section>
+            <section class="resultadosSection" id="scorersSection" hidden>
+                <div class="detalleBlockHeader"><h2>Goleadores</h2></div>
+                <div class="scorersList" id="publicScorersList"></div>
+            </section>
+        </div>
+    </main>
+
+    <script src="../../js/script.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/api.js"></script>
+    <script src="../../js/pages/resultados.js"></script>
+</body>
+</html>
