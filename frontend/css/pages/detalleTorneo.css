@@ -313,6 +313,28 @@
     white-space: nowrap;
 }
 
+#registrationRequestBox {
+    margin-bottom: 24px;
+    border-left: 4px solid var(--accent);
+}
+
+#registrationRequestStatus {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.detalleNavItem:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+}
+
+.detalleNavItem:disabled:hover {
+    background: transparent;
+    color: var(--text-muted);
+}
+
 .detalleNameRow {
     display: flex;
     align-items: center;
@@ -532,6 +554,27 @@ body.light .onboardingCard {
     border-radius: var(--radius-lg);
     padding: 32px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 580px) {
+    .detalleMain {
+        padding: 16px;
+    }
+
+    .detalleHeaderInfo h1 {
+        font-size: 1.35rem;
+        line-height: 1.2;
+    }
+
+    .detallePublicLink {
+        width: 100%;
+        white-space: normal;
+    }
+
+    .detalleBlock {
+        padding: 20px;
+        border-radius: var(--radius-md);
+    }
 }
 
 .detalleBlockHeader {

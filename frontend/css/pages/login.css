@@ -62,6 +62,52 @@
     transition: transform 0.2s ease;
 }
 
+.fieldError {
+    display: block;
+    min-height: 1.2em;
+    color: #b42318;
+    font-size: 0.85rem;
+}
+
+.authFieldset {
+    margin: 18px 0 0;
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-soft);
+}
+
+.authFieldset legend {
+    padding: 0 6px;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.authFieldset label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 9px 0 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.auth-card .authFieldset input[type="radio"] {
+    width: auto;
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+.authFieldset small {
+    display: block;
+    margin-top: 10px;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    line-height: 1.35;
+}
+
 .auth-card button:hover {
     transform: translateY(-2px);
 }
