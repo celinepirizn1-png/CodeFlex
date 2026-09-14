@@ -9,7 +9,7 @@ Instituto Tecnológico Superior "Arias - Balparda" (UTU) - 2026
 
 | Integrante | Rol |
 |---|---|
-| Bryan | Backend Developer |
+| Bryan Gómez| Backend Developer |
 | Aaron Sierra | (Diseñador y Documentador) |
 | Celine Píriz | (Lider y Frontend Developer) |
 | Santiago Espárrago | (Backend Developer) |
