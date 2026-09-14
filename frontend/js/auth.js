@@ -1,49 +1,35 @@
-// ─── AUTENTICACIÓN SIMULADA (localStorage) + GOOGLE IDENTITY SERVICES ───
-// Archivo global: modal de login/registro, sesión simulada, dropdown de perfil.
+const projectRoot = window.location.pathname.includes('/html/')
+    ? window.location.pathname.split('/html/')[0]
+    : '';
+const authApi = (endpoint) => `${projectRoot}/php/api/auth/${endpoint}`;
+const SESSION_KEY = 'sgdmSesionLocal';
 
-// TODO: reemplazar por un Client ID real de Google Cloud Console (GIS).
-const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID_HERE.apps.googleusercontent.com';
-
-const SESSION_KEY = 'codeflexSession';
-
-const getSession = () => {
+// Roles y sesiones guardados en localStorage son temporales: no son seguridad
+// real y se podrán modificar desde la consola hasta que exista backend para ello.
+window.getSession = () => {
     try {
-        return JSON.parse(localStorage.getItem(SESSION_KEY));
-    } catch (e) {
+        return JSON.parse(localStorage.getItem(SESSION_KEY) || 'null');
+    } catch (error) {
         return null;
     }
 };
 
-const setSession = (data) => {
-    const existing = getSession();
-    const createdAt = (existing && existing.email === data.email && existing.createdAt) || new Date().toISOString();
-    const session = {
-        name: data.name || '',
-        email: data.email || '',
-        avatarUrl: data.avatarUrl || '',
-        tournaments: data.tournaments || [],
-        createdAt
-    };
+window.setSession = (session) => {
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    renderAuthControl();
+    window.dispatchEvent(new CustomEvent('sgdm:session-changed', { detail: session }));
 };
 
-const clearSession = () => {
+window.clearSession = () => {
     localStorage.removeItem(SESSION_KEY);
-    renderAuthControl();
+    window.dispatchEvent(new Event('sgdm:session-changed'));
 };
-
-// ─── MODAL DE AUTENTICACIÓN ───
 const authOverlay = document.getElementById('authOverlay');
-const authClose = document.getElementById('authClose');
 const panelLogin = document.getElementById('panelLogin');
 const panelRegister = document.getElementById('panelRegister');
-const toRegister = document.getElementById('toRegister');
-const toLogin = document.getElementById('toLogin');
 
 const showAuthPanel = (panel) => {
-    if (panelLogin) panelLogin.classList.toggle('authPanelHidden', panel !== 'login');
-    if (panelRegister) panelRegister.classList.toggle('authPanelHidden', panel !== 'register');
+    panelLogin?.classList.toggle('authPanelHidden', panel !== 'login');
+    panelRegister?.classList.toggle('authPanelHidden', panel !== 'register');
 };
 
 const openAuth = (panel = 'login') => {
@@ -59,193 +45,154 @@ const closeAuth = () => {
     document.body.classList.remove('modalOpen');
 };
 
-const openLoginBtn = document.getElementById('openLoginBtn');
-if (openLoginBtn) openLoginBtn.addEventListener('click', () => openAuth('login'));
-if (authClose) authClose.addEventListener('click', closeAuth);
-if (authOverlay) authOverlay.addEventListener('click', (e) => {
-    if (e.target === authOverlay) closeAuth();
-});
-if (toRegister) toRegister.addEventListener('click', () => showAuthPanel('register'));
-if (toLogin) toLogin.addEventListener('click', () => showAuthPanel('login'));
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && authOverlay && !authOverlay.hidden) closeAuth();
-});
-
-// ─── LOGIN / REGISTRO SIMULADOS (sin Google) ───
-const showAuthError = (el, message) => {
-    if (!el) return;
-    el.textContent = message;
-    el.hidden = false;
+const showAuthError = (element, message) => {
+    if (!element) return;
+    element.textContent = message;
+    element.hidden = !message;
 };
 
-const loginSubmitBtn = document.getElementById('loginSubmitBtn');
-const loginError = document.getElementById('loginError');
-if (loginSubmitBtn) {
-    loginSubmitBtn.addEventListener('click', () => {
-        const email = document.getElementById('loginEmail')?.value.trim();
-        const password = document.getElementById('loginPassword')?.value;
-        if (!email || !password) {
-            showAuthError(loginError, 'Completá correo y contraseña.');
-            return;
-        }
-        if (loginError) loginError.hidden = true;
-        setSession({ name: email.split('@')[0], email, avatarUrl: '', tournaments: [] });
-        closeAuth();
-    });
-}
+const loadSession = async () => {
+    const loginButton = document.getElementById('openLoginBtn');
+    const profileControl = document.getElementById('profileControl');
+    const profileEmail = document.getElementById('profileEmail');
+    const profileInitial = document.getElementById('profileInitial');
+    if (!loginButton || !profileControl) {
+        window.dispatchEvent(new Event('sgdm:session-ready'));
+        return;
+    }
 
-const registerSubmitBtn = document.getElementById('registerSubmitBtn');
-const registerError = document.getElementById('registerError');
-if (registerSubmitBtn) {
-    registerSubmitBtn.addEventListener('click', () => {
-        const name = document.getElementById('regName')?.value.trim();
-        const email = document.getElementById('regEmail')?.value.trim();
-        const password = document.getElementById('regPassword')?.value;
-        const confirm = document.getElementById('regConfirm')?.value;
-        if (!name || !email || !password) {
-            showAuthError(registerError, 'Completá todos los campos.');
-            return;
-        }
-        if (password !== confirm) {
-            showAuthError(registerError, 'Las contraseñas no coinciden.');
-            return;
-        }
-        if (registerError) registerError.hidden = true;
-        setSession({ name, email, avatarUrl: '', tournaments: [] });
-        closeAuth();
-    });
-}
-
-// ─── GOOGLE IDENTITY SERVICES ───
-const decodeJwtPayload = (token) => {
     try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-            atob(base64).split('').map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-        );
-        return JSON.parse(jsonPayload);
-    } catch (e) {
-        return null;
+        const response = await fetch(authApi('me.php'), { credentials: 'same-origin' });
+        if (!response.ok) return;
+
+        const data = await response.json();
+        const usuario = data.usuario;
+        window.setSession({
+            id: usuario.id_usuario,
+            name: usuario.nombre,
+            email: usuario.email,
+            role: usuario.rol || 'participante'
+        });
+        loginButton.hidden = true;
+        profileControl.hidden = false;
+        if (profileEmail) profileEmail.textContent = usuario.email;
+        if (profileInitial) {
+            profileInitial.textContent = usuario.nombre.charAt(0).toUpperCase();
+            profileInitial.hidden = false;
+        }
+    } catch (error) {
+        console.error('No se pudo consultar la sesión.', error);
+    } finally {
+        window.dispatchEvent(new Event('sgdm:session-ready'));
     }
 };
 
-const handleGoogleCredential = (response) => {
-    const payload = decodeJwtPayload(response.credential);
-    if (!payload) return;
-    setSession({
-        name: payload.name || payload.email,
-        email: payload.email,
-        avatarUrl: payload.picture || '',
-        tournaments: []
-    });
-    closeAuth();
-};
-
-const initGoogleSignIn = () => {
-    if (!window.google || !google.accounts || !google.accounts.id) return;
-    google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleCredential
-    });
-    const renderOpts = { theme: 'outline', size: 'large', width: 320, text: 'continue_with' };
-    const loginBtnContainer = document.getElementById('googleBtnLogin');
-    const registerBtnContainer = document.getElementById('googleBtnRegister');
-    if (loginBtnContainer) google.accounts.id.renderButton(loginBtnContainer, renderOpts);
-    if (registerBtnContainer) google.accounts.id.renderButton(registerBtnContainer, renderOpts);
-};
-
-(function waitForGoogleIdentity(retriesLeft) {
-    if (window.google && google.accounts && google.accounts.id) {
-        initGoogleSignIn();
-    } else if (retriesLeft > 0) {
-        setTimeout(() => waitForGoogleIdentity(retriesLeft - 1), 200);
+const submitModalAuth = async (endpoint, payload, errorElement) => {
+    try {
+        const response = await fetch(authApi(endpoint), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'No se pudo completar la operación.');
+        if (endpoint === 'login.php' && data.requiere_2fa) {
+            const twoFactorPanel = document.getElementById('modalTwoFactor');
+            const twoFactorCode = document.getElementById('modalTwoFactorCode');
+            const twoFactorMessage = document.getElementById('modalTwoFactorMessage');
+            if (!twoFactorPanel || !twoFactorCode || !twoFactorMessage) {
+                throw new Error('No se pudo cargar la verificación de seguridad.');
+            }
+            document.getElementById('panelLogin')?.classList.add('authPanelHidden');
+            twoFactorPanel.classList.remove('authPanelHidden');
+            twoFactorMessage.textContent = `Código temporal: ${data.codigo_demo}. Válido durante 5 minutos.`;
+            return;
+        }
+        if (data.usuario) {
+            window.setSession({
+                id: data.usuario.id_usuario,
+                name: data.usuario.nombre,
+                email: data.usuario.email,
+                role: data.usuario.rol || 'participante'
+            });
+        }
+        closeAuth();
+        window.location.reload();
+    } catch (error) {
+        showAuthError(errorElement, error.message);
     }
-})(25);
+};
 
-// ─── DROPDOWN DE PERFIL (navbar) ───
-const profileControl = document.getElementById('profileControl');
-const profileTrigger = document.getElementById('profileTrigger');
-const profileDropdown = document.getElementById('profileDropdown');
-const sideMenuRegister = document.getElementById('sideMenuRegister');
-const logoutBtn = document.getElementById('logoutBtn');
+document.getElementById('openLoginBtn')?.addEventListener('click', () => openAuth('login'));
+document.getElementById('authClose')?.addEventListener('click', closeAuth);
+document.getElementById('toRegister')?.addEventListener('click', () => showAuthPanel('register'));
+document.getElementById('toLogin')?.addEventListener('click', () => showAuthPanel('login'));
+document.getElementById('sideMenuRegister')?.addEventListener('click', () => openAuth('register'));
+authOverlay?.addEventListener('click', (event) => {
+    if (event.target === authOverlay) closeAuth();
+});
 
-function closeProfileDropdown() {
-    if (profileDropdown) profileDropdown.hidden = true;
-    if (profileTrigger) profileTrigger.setAttribute('aria-expanded', 'false');
-}
+document.getElementById('loginSubmitBtn')?.addEventListener('click', () => {
+    submitModalAuth('login.php', {
+        email: document.getElementById('loginEmail')?.value || '',
+        password: document.getElementById('loginPassword')?.value || ''
+    }, document.getElementById('loginError'));
+});
 
-function toggleProfileDropdown(force) {
-    if (!profileDropdown) return;
-    const shouldOpen = force !== undefined ? force : profileDropdown.hidden;
-    if (shouldOpen && typeof window.closeSideMenu === 'function') window.closeSideMenu();
-    profileDropdown.hidden = !shouldOpen;
-    if (profileTrigger) profileTrigger.setAttribute('aria-expanded', String(shouldOpen));
-}
-
-if (profileTrigger) {
-    profileTrigger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleProfileDropdown();
-    });
-}
-
-document.addEventListener('click', (e) => {
-    if (profileDropdown && !profileDropdown.hidden && profileControl && !profileControl.contains(e.target)) {
-        closeProfileDropdown();
+document.getElementById('modalTwoFactorSubmit')?.addEventListener('click', async () => {
+    const code = document.getElementById('modalTwoFactorCode')?.value || '';
+    const message = document.getElementById('modalTwoFactorMessage');
+    try {
+        const response = await fetch(authApi('verificar-2fa.php'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ codigo: code })
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'No se pudo verificar el código.');
+        if (data.usuario) {
+            window.setSession({
+                id: data.usuario.id_usuario,
+                name: data.usuario.nombre,
+                email: data.usuario.email,
+                role: data.usuario.rol || 'participante'
+            });
+        }
+        window.location.reload();
+    } catch (error) {
+        if (message) message.textContent = error.message;
     }
 });
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeProfileDropdown();
+document.getElementById('registerSubmitBtn')?.addEventListener('click', () => {
+    submitModalAuth('registro.php', {
+        nombre: document.getElementById('regName')?.value || '',
+        email: document.getElementById('regEmail')?.value || '',
+        password: document.getElementById('regPassword')?.value || ''
+    }, document.getElementById('registerError'));
 });
 
-if (sideMenuRegister) {
-    sideMenuRegister.addEventListener('click', () => openAuth('register'));
-}
-
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        closeProfileDropdown();
-        clearSession();
-    });
-}
-
-// ─── RENDER DEL CONTROL DE AUTENTICACIÓN ───
-function renderAuthControl() {
-    const session = getSession();
-    const isLoggedIn = !!(session && session.email);
-
-    const loginBtn = document.getElementById('openLoginBtn');
-    const control = document.getElementById('profileControl');
-    const emailEl = document.getElementById('profileEmail');
-    const avatarEl = document.getElementById('profileAvatar');
-    const initialEl = document.getElementById('profileInitial');
-    const registerLink = document.getElementById('sideMenuRegister');
-
-    if (loginBtn) loginBtn.hidden = isLoggedIn;
-    if (control) control.hidden = !isLoggedIn;
-    if (registerLink) registerLink.hidden = isLoggedIn;
-
-    if (!isLoggedIn) return;
-
-    if (emailEl) emailEl.textContent = session.email;
-
-    const initial = (session.name || session.email || '?').trim().charAt(0).toUpperCase();
-    if (session.avatarUrl) {
-        if (avatarEl) {
-            avatarEl.src = session.avatarUrl;
-            avatarEl.hidden = false;
-        }
-        if (initialEl) initialEl.hidden = true;
-    } else {
-        if (avatarEl) avatarEl.hidden = true;
-        if (initialEl) {
-            initialEl.textContent = initial;
-            initialEl.hidden = false;
-        }
+document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+    try {
+        await fetch(authApi('logout.php'), { method: 'POST', credentials: 'same-origin' });
+    } finally {
+        window.clearSession();
+        window.location.href = `${projectRoot}/html/nologin/inicio.html`;
     }
-}
+});
 
-renderAuthControl();
+document.getElementById('profileTrigger')?.addEventListener('click', () => {
+    const dropdown = document.getElementById('profileDropdown');
+    const trigger = document.getElementById('profileTrigger');
+    if (!dropdown || !trigger) return;
+    dropdown.hidden = !dropdown.hidden;
+    trigger.setAttribute('aria-expanded', String(!dropdown.hidden));
+});
+
+loadSession();
+
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && authOverlay && !authOverlay.hidden) closeAuth();
+});
