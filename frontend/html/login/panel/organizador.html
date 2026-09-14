@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Equipo CodeFlex">
+    <meta name="description" content="CodeFlex - Panel del organizador.">
+    <link rel="icon" href="../../../img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="../../../img/favicon-amber.png" type="image/png">
+    <link rel="stylesheet" href="../../../css/style.css">
+    <link rel="stylesheet" href="../../../css/pages/panel.css">
+    <title>Panel del organizador | CodeFlex</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="light" data-panel-role="organizador" data-required-role="organizador">
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('siteTheme');
+            if (savedTheme === 'dark') {
+                document.body.classList.remove('light');
+                document.body.classList.add('dark');
+            } else {
+                document.body.classList.remove('dark');
+                document.body.classList.add('light');
+            }
+        })();
+    </script>
+
+    <header class="topbar">
+        <div class="topbarBrand">
+            <img id="logo" src="../../../img/cup.png" alt="Logotipo de CodeFlex">
+            <span class="brandName">SportsAlways</span>
+        </div>
+
+        <nav class="headerNav" aria-label="Menú principal">
+            <a href="../../nologin/inicio.html">Inicio</a>
+            <a href="../torneos.html">Torneos</a>
+            <a href="../crearTorneo.html">Crear torneo</a>
+            <a href="../nosotros.html">Nosotros</a>
+            <a href="../informacion.html">Información</a>
+        </nav>
+
+        <div class="headerActions">
+            <button class="themeToggle" type="button" aria-label="Activar modo oscuro" data-theme-toggle>
+                <span class="iconSun" aria-hidden="true">☀</span>
+                <img class="iconMoon" src="../../../img/icon-moon.png" alt="" aria-hidden="true">
+            </button>
+            <div class="authControl" id="authControl">
+                <button class="btn btnPrimary headerCta" id="openLoginBtn" type="button">
+                    <span class="ctaLabelFull">Iniciar sesión</span>
+                    <span class="ctaLabelShort">Entrar</span>
+                </button>
+                <div class="profileControl" id="profileControl" hidden>
+                    <button class="profileTrigger" id="profileTrigger" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Abrir menú de perfil">
+                        <img class="profileAvatar" id="profileAvatar" src="" alt="" hidden>
+                        <span class="profileInitial" id="profileInitial" hidden></span>
+                    </button>
+                    <div class="profileDropdown" id="profileDropdown" hidden role="menu">
+                        <span class="profileEmail" id="profileEmail"></span>
+                        <span class="profilePlan">Suscripción: Free</span>
+                        <hr class="menuDivider">
+                        <a href="../usuario.html" role="menuitem">Mi cuenta</a>
+                        <a href="../mistorneos.html" role="menuitem">Mis torneos</a>
+                        <a href="organizador.html" role="menuitem">Panel de control</a>
+                        <hr class="menuDivider">
+                        <button type="button" id="logoutBtn" role="menuitem">Cerrar sesión</button>
+                    </div>
+                </div>
+            </div>
+            <button class="menuIcon" type="button" aria-label="Abrir menú de navegación" aria-expanded="false">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="6" x2="20" y2="6"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <div class="menuOverlay" hidden data-menu-close></div>
+    <div class="sideMenu" aria-hidden="true">
+        <div class="sideMenuHeader">
+            <span class="brandName">SportsAlways</span>
+            <button class="btnClose" type="button" aria-label="Cerrar menú" data-menu-close>✕</button>
+        </div>
+        <nav class="sideMenuNav" aria-label="Menú móvil">
+            <a href="../../nologin/inicio.html">Inicio</a>
+            <a href="../torneos.html">Torneos</a>
+            <a href="../crearTorneo.html">Crear torneo</a>
+            <a href="../nosotros.html">Nosotros</a>
+            <a href="../informacion.html">Información</a>
+            <hr class="menuDivider">
+            <button type="button" id="sideMenuRegister" class="menuReg">Registrarse</button>
+        </nav>
+    </div>
+
+    <main class="pageContent">
+        <section class="pageHero pageHero--panel">
+            <div class="container pageHeroInner">
+                <div>
+                    <h1 class="pageHeroTitle" id="panelTitle">Panel de control</h1>
+                    <p class="pageHeroSub" id="panelSub">Gestioná tus torneos desde un solo lugar.</p>
+                </div>
+                <a href="../crearTorneo.html" class="btn btnPrimary" id="panelHeroCta">+ Crear torneo</a>
+            </div>
+        </section>
+
+        <section class="pageSection">
+            <div class="container">
+                <nav class="panelSwitcher" aria-label="Vistas del panel">
+                    <a href="organizador.html" data-role="organizador">🗂️ Organizador</a>
+                    <a href="admin.html" data-role="admin">🛡️ Administración</a>
+                    <a href="participante.html" data-role="participante">🎯 Participante</a>
+                </nav>
+
+                <div class="panelStats" id="panelStats"></div>
+
+                <div class="panelSectionHead">
+                    <h2 id="panelListTitle">Tus torneos</h2>
+                </div>
+
+                <div class="emptyState" id="panelEmpty" hidden>
+                    <div class="emptyStateIcon">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+                            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+                            <path d="M4 22h16"/>
+                            <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/>
+                            <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/>
+                            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>
+                        </svg>
+                    </div>
+                    <h2 id="panelEmptyTitle">Todavía no hay torneos</h2>
+                    <p id="panelEmptyText">Cuando crees tu primer torneo, va a aparecer acá.</p>
+                    <a href="../crearTorneo.html" class="btn btnPrimary" id="panelEmptyAction">Crear un torneo</a>
+                </div>
+
+                <div class="torneosGrid" id="panelGrid" hidden></div>
+                <div class="adminTorneoList" id="panelAdminList" hidden></div>
+                <section class="detalleBlock" id="panelRequests" hidden>
+                    <div class="detalleBlockHeader">
+                        <h2>Solicitudes pendientes</h2>
+                    </div>
+                    <div id="panelRequestsList"></div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="siteFooter">
+        <div class="container footerGrid">
+            <div class="footerBrand">
+                <span class="brandName">CodeFlex</span>
+                <p>Sistema de Gestión Deportiva Modular. Torneos multideporte simples, rápidos y compartibles.</p>
+            </div>
+            <div class="footerCol">
+                <h4>Producto</h4>
+                <a href="../crearTorneo.html">Crear un torneo</a>
+                <a href="../torneos.html">Buscar torneos</a>
+                <a href="../../nologin/inicio.html#formatos">Formatos</a>
+            </div>
+            <div class="footerCol">
+                <h4>Equipo</h4>
+                <div class="footerMember">
+                    <span class="memberName">Aaron Sierra</span>
+                    <span class="memberRole">Diseño · Documentación</span>
+                </div>
+                <div class="footerMember">
+                    <span class="memberName">Bryan Gómez</span>
+                    <span class="memberRole">Backend</span>
+                </div>
+                <div class="footerMember">
+                    <span class="memberName">Celine Píriz</span>
+                    <span class="memberRole">Líder · Frontend</span>
+                </div>
+                <div class="footerMember">
+                    <span class="memberName">Santiago Espárrago</span>
+                    <span class="memberRole">Backend</span>
+                </div>
+            </div>
+            <div class="footerCol">
+                <h4>Proyecto</h4>
+                <p class="footerNote">UTU — ITS Arias Balparda</p>
+                <p class="footerNote">Uruguay 🇺🇾</p>
+            </div>
+        </div>
+        <div class="container footerBottom">
+            <span>© <span id="year">2026</span> CODEFLEX. Todos los derechos reservados.</span>
+            <span>Hecho con ♥</span>
+        </div>
+    </footer>
+
+    <!-- Modal de autenticación -->
+    <div class="authOverlay" id="authOverlay" hidden>
+        <div class="authModal" role="dialog" aria-modal="true" aria-label="Autenticación">
+            <button class="authClose" id="authClose" type="button" aria-label="Cerrar">✕</button>
+
+            <div class="authPanel" id="panelLogin">
+                <div class="authHeader">
+                    <img src="../../../img/cup.png" alt="" class="authLogo">
+                    <h2>Iniciar sesión</h2>
+                    <p class="authSub">Bienvenido de vuelta a CodeFlex</p>
+                </div>
+                <div class="authField">
+                    <label for="loginEmail">Correo electrónico</label>
+                    <input type="email" id="loginEmail" placeholder="tu@email.com" autocomplete="email">
+                </div>
+                <div class="authField">
+                    <label for="loginPassword">Contraseña</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <p class="authError" id="loginError" hidden></p>
+                <button class="btn btnPrimary authSubmit" id="loginSubmitBtn" type="button">Ingresar</button>
+                <div class="authDivider">o</div>
+                <div class="googleBtnSlot" id="googleBtnLogin"></div>
+                <p class="authSwitch">¿No tenés cuenta? <button type="button" class="authLink" id="toRegister">Registrarse</button></p>
+            </div>
+
+            <div class="authPanel authPanelHidden" id="modalTwoFactor">
+                <div class="authHeader"><h2>Verificación adicional</h2><p class="authSub" id="modalTwoFactorMessage">Ingresa el código temporal.</p></div>
+                <div class="authField"><label for="modalTwoFactorCode">Código de verificación</label><input type="text" id="modalTwoFactorCode" inputmode="numeric" pattern="\d{6}" maxlength="6" autocomplete="one-time-code"></div>
+                <button class="btn btnPrimary authSubmit" id="modalTwoFactorSubmit" type="button">Verificar código</button>
+            </div>
+            <div class="authPanel authPanelHidden" id="panelRegister">
+                <div class="authHeader">
+                    <img src="../../../img/cup.png" alt="" class="authLogo">
+                    <h2>Crear cuenta</h2>
+                    <p class="authSub">Sumate a CodeFlex gratis</p>
+                </div>
+                <div class="authField">
+                    <label for="regName">Nombre completo</label>
+                    <input type="text" id="regName" placeholder="Tu nombre" autocomplete="name">
+                </div>
+                <div class="authField">
+                    <label for="regEmail">Correo electrónico</label>
+                    <input type="email" id="regEmail" placeholder="tu@email.com" autocomplete="email">
+                </div>
+                <div class="authField">
+                    <label for="regPassword">Contraseña</label>
+                    <input type="password" id="regPassword" placeholder="••••••••" autocomplete="new-password">
+                </div>
+                <div class="authField">
+                    <label for="regConfirm">Confirmar contraseña</label>
+                    <input type="password" id="regConfirm" placeholder="••••••••" autocomplete="new-password">
+                </div>
+                <p class="authError" id="registerError" hidden></p>
+                <button class="btn btnPrimary authSubmit" id="registerSubmitBtn" type="button">Crear cuenta</button>
+                <div class="authDivider">o</div>
+                <div class="googleBtnSlot" id="googleBtnRegister"></div>
+                <p class="authSwitch">¿Ya tenés cuenta? <button type="button" class="authLink" id="toLogin">Iniciar sesión</button></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/script.js"></script>
+    <script src="../../../js/permisos.js"></script>
+    <script src="../../../js/auth.js"></script>
+    <script src="../../../js/api.js"></script>
+    <script src="../../../js/pages/panel.js"></script>
+</body>
+</html>
