@@ -37,6 +37,8 @@ const panelEmpty = document.getElementById('panelEmpty');
 const panelEmptyTitle = document.getElementById('panelEmptyTitle');
 const panelEmptyText = document.getElementById('panelEmptyText');
 const panelEmptyAction = document.getElementById('panelEmptyAction');
+const panelRequests = document.getElementById('panelRequests');
+const panelRequestsList = document.getElementById('panelRequestsList');
 
 // Marca la pestaña activa del switcher según el rol de la página.
 document.querySelectorAll('.panelSwitcher a').forEach(a => {
@@ -110,6 +112,53 @@ const renderGrid = (torneos, base) => {
     torneos.forEach(t => panelGrid.appendChild(buildTorneoCard(t, base)));
 };
 
+const renderRequests = async () => {
+    if (!panelRequests || !panelRequestsList || role !== 'organizador') return;
+    const session = window.getSession?.();
+    const torneos = (await loadTournamentsFromApi().catch(() => getTorneos()))
+        .filter(torneo => torneo.ownerEmail && torneo.ownerEmail === session?.email);
+    const requests = await loadRequestsFromApi().catch(() => []);
+    const pending = requests.filter(request => request.estado === 'pendiente'
+        && torneos.some(torneo => torneo.id === Number(request.torneo_id)));
+
+    panelRequests.hidden = false;
+    panelRequestsList.innerHTML = '';
+    if (!pending.length) {
+        panelRequestsList.textContent = 'No hay solicitudes pendientes.';
+        return;
+    }
+
+    pending.forEach(request => {
+        const torneo = torneos.find(item => item.id === Number(request.torneo_id));
+        const row = document.createElement('div');
+        row.className = 'adminTorneoRow';
+        const info = document.createElement('div');
+        info.className = 'adminTorneoInfo';
+        info.textContent = `${request.participante_email} quiere entrar a ${torneo.name}`;
+        const actions = document.createElement('div');
+        actions.className = 'adminTorneoActions';
+        ['Aprobar', 'Rechazar'].forEach(label => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = label === 'Aprobar' ? 'btn btnPrimary' : 'btn btnSecondary';
+            button.textContent = label;
+            button.addEventListener('click', async () => {
+                await apiRequest('inscripciones.php', {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        id_inscripcion: Number(request.id_inscripcion),
+                        estado: label === 'Aprobar' ? 'aceptada' : 'rechazada'
+                    })
+                });
+                renderRequests();
+            });
+            actions.appendChild(button);
+        });
+        row.append(info, actions);
+        panelRequestsList.appendChild(row);
+    });
+};
+
 // ─── Vista ADMIN: lista con acciones (abrir / resultados / eliminar) ───
 const renderAdminList = (torneos) => {
     panelEmpty.hidden = true;
@@ -163,8 +212,8 @@ const renderAdminList = (torneos) => {
     });
 };
 
-function render() {
-    const torneos = getTorneos();
+async function render() {
+    const torneos = await loadTournamentsFromApi().catch(() => getTorneos());
 
     if (role === 'admin') {
         panelTitle.textContent = 'Panel de administración';
@@ -235,6 +284,7 @@ function render() {
         return;
     }
     renderGrid(torneos, 'detalle');
+    renderRequests();
 }
 
 render();

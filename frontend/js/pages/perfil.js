@@ -1,14 +1,25 @@
-// ─── MI PERFIL — lee y edita la sesión unificada guardada por js/auth.js ───
-
 const profileLayout = document.getElementById('profileLayout');
-const session = getSession();
+const profileProjectRoot = window.location.pathname.split('/html/')[0];
 
-if (!session || !session.email) {
-    window.location.href = '../index.html';
-} else {
-    if (profileLayout) profileLayout.hidden = false;
-    initPerfil(session);
-}
+const loadProfile = async () => {
+    try {
+        const data = await apiRequest('perfil.php');
+        const usuario = data.usuario;
+        const session = {
+            id: usuario.id_usuario,
+            name: usuario.nombre,
+            email: usuario.email,
+            createdAt: null,
+        };
+
+        if (profileLayout) profileLayout.hidden = false;
+        initPerfil({ ...session, stats: data });
+    } catch (error) {
+        window.location.href = '../nologin/login.html';
+    }
+};
+
+loadProfile();
 
 function formatMemberSince(iso) {
     if (!iso) return '—';
@@ -67,17 +78,19 @@ function initPerfil(session) {
     nameCancelBtn.addEventListener('click', closeNameEdit);
     nameSaveBtn.addEventListener('click', () => {
         const newName = nameInput.value.trim();
-        if (newName) session.name = newName;
-        setSession(session);
-        renderIdentity(session);
+        if (newName) {
+            session.name = newName;
+            renderIdentity(session);
+        }
         closeNameEdit();
     });
 
-    // ─── Torneos creados ───
+    // ─── Torneos creados y participados ───
     const torneosCount = document.getElementById('profileTorneosCount');
     if (torneosCount) {
-        const torneos = JSON.parse(localStorage.getItem('codeflexTorneos') || '[]');
-        torneosCount.textContent = torneos.length;
+        torneosCount.textContent = session.stats?.torneos_participados || 0;
+        const torneosLabel = document.querySelector('.profileTorneosLabel');
+        if (torneosLabel) torneosLabel.textContent = 'torneos en los que participás';
     }
 
     // ─── Tema claro/oscuro ───
@@ -132,8 +145,12 @@ function initPerfil(session) {
 
     // ─── Cerrar sesión ───
     const logoutBtn = document.getElementById('profileLogoutBtn');
-    logoutBtn.addEventListener('click', () => {
-        clearSession();
-        window.location.href = '../index.html';
+    logoutBtn.addEventListener('click', async () => {
+        await fetch(`${profileProjectRoot}/php/api/auth/logout.php`, {
+            method: 'POST',
+            credentials: 'same-origin'
+        });
+        window.clearSession?.();
+        window.location.href = '../nologin/inicio.html';
     });
 }

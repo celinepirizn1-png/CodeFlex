@@ -321,7 +321,7 @@ updatePreview();
 
 const btnSubmitTournament = document.getElementById('btnSubmitTournament');
 if (btnSubmitTournament) {
-    btnSubmitTournament.addEventListener('click', () => {
+    btnSubmitTournament.addEventListener('click', async () => {
         const sportLabel = sportValue ? sportValue.textContent : 'Torneo';
         const participants = partInput
             ? (partInput.clampParticipants ? partInput.clampParticipants() : (parseInt(partInput.value, 10) || 2))
@@ -332,26 +332,23 @@ if (btnSubmitTournament) {
         const stageType = (document.querySelector('input[name="stageType"]:checked') || {}).value || 'single';
         const singleFormat = document.getElementById('singleFormat')?.value || 'knockout';
 
-        const torneos = JSON.parse(localStorage.getItem('codeflexTorneos') || '[]');
-        torneos.push({
-            id: Date.now(),
-            name: enteredName || `Torneo de ${sportLabel}`,
-            sport: sportLabel,
-            format: formatLabel,
-            formatKey: stageType === 'single' ? singleFormat : 'multi-stage',
-            participants,
-            status: 'borrador',
-            createdAt: new Date().toISOString(),
-            description: '',
-            visibility: 'private',
-            legs: 1,
-            placements: 'Solo 1°/2° puesto',
-            teams: Array.from({ length: participants }, (_, i) => ({ id: i + 1, name: `Team ${i + 1}` })),
-            bracket: null
-        });
-        localStorage.setItem('codeflexTorneos', JSON.stringify(torneos));
-
-        const inPagesDir = window.location.pathname.includes('/pages/');
-        window.location.href = inPagesDir ? 'mistorneos.html' : 'pages/mistorneos.html';
+        const databaseFormat = singleFormat === 'round-robin' ? 'liga'
+            : singleFormat === 'swiss' ? 'sistema_suizo' : 'eliminacion_directa';
+        try {
+            const created = await apiRequest('torneos.php', {
+                method: 'POST',
+                body: JSON.stringify({
+                    nombre: enteredName || `Torneo de ${sportLabel}`,
+                    formato: databaseFormat,
+                    fecha_inicio: new Date().toISOString().slice(0, 10)
+                })
+            });
+            await syncTeamsToApi(created.torneo.id_torneo, Array.from({ length: participants }, (_, index) => ({
+                name: `Team ${index + 1}`
+            })));
+            window.location.href = 'mistorneos.html';
+        } catch (error) {
+            window.alert(error.message);
+        }
     });
 }

@@ -24,11 +24,9 @@ const INITIAL_VISIBLE = 6;
 const STEP = 6;
 let visibleCount = INITIAL_VISIBLE;
 
-const getPublicTorneos = () => {
-    const torneos = JSON.parse(localStorage.getItem('codeflexTorneos') || '[]');
-    // Un torneo solo es público si además de la visibilidad está Activo:
-    // un Borrador no debería listarse aunque su visibilidad sea "Público".
-    return torneos.filter(t => t.status === 'activo' && t.visibility === 'public');
+const getPublicTorneos = async () => {
+    const torneos = await loadTournamentsFromApi();
+    return torneos.filter(torneo => torneo.status === 'activo');
 };
 
 const populateSelectOptions = (select, values, allLabel) => {
@@ -147,8 +145,8 @@ const clearFilters = () => {
     renderTorneos();
 };
 
-const renderTorneos = () => {
-    const all = getPublicTorneos();
+const renderTorneos = async () => {
+    const all = await getPublicTorneos();
 
     populateSelectOptions(sportFilter, [...new Set(all.map(t => t.sport).filter(Boolean))].sort(), 'Todos los deportes');
     populateSelectOptions(formatFilter, [...new Set(all.map(t => t.format).filter(Boolean))].sort(), 'Todos los formatos');

@@ -6,15 +6,32 @@ const torneoId = Number(params.get('id'));
 const notFoundState = document.getElementById('notFoundState');
 const resultadosLayout = document.getElementById('resultadosLayout');
 
-const torneos = JSON.parse(localStorage.getItem('codeflexTorneos') || '[]');
-const torneo = torneos.find(t => t.id === torneoId);
+const loadResultTournament = async () => {
+    try {
+        const data = await apiRequest(`torneos.php?id=${torneoId}`);
+        const torneo = (data.torneos || []).map(mapTournament)[0];
+        if (!torneo) {
+            if (notFoundState) notFoundState.hidden = false;
+            return;
+        }
+        const teams = await loadTeamsFromApi(torneoId);
+        const matches = await loadMatchesFromApi(torneoId);
+        const names = new Map(teams.map(team => [Number(team.id), team.nombre || team.name]));
+        torneo.matches = matches.map(match => ({
+            teamA: names.get(Number(match.equipo_a)) || `Equipo ${match.equipo_a}`,
+            teamB: names.get(Number(match.equipo_b)) || `Equipo ${match.equipo_b}`,
+            scoreA: match.marcador_a,
+            scoreB: match.marcador_b,
+            playedAt: match.fecha_jugado
+        }));
+        if (resultadosLayout) resultadosLayout.hidden = false;
+        initResultados(torneo);
+    } catch (error) {
+        if (notFoundState) notFoundState.hidden = false;
+    }
+};
 
-if (!torneo) {
-    if (notFoundState) notFoundState.hidden = false;
-} else {
-    if (resultadosLayout) resultadosLayout.hidden = false;
-    initResultados(torneo);
-}
+loadResultTournament();
 
 /* Mismo motor de cálculo que el panel de gestión (detalleTorneo.js).
    Se duplica acá a propósito: son páginas separadas y no comparten scope. */

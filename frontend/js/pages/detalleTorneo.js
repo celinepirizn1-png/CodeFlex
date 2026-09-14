@@ -11,12 +11,41 @@ const torneoId = Number(params.get('id'));
 const notFoundState = document.getElementById('notFoundState');
 const detalleLayout = document.getElementById('detalleLayout');
 
-let torneos = getTorneos();
-let torneoIndex = torneos.findIndex(t => t.id === torneoId);
+let torneos = [];
+let torneoIndex = -1;
 
-if (torneoIndex === -1) {
-    if (notFoundState) notFoundState.hidden = false;
-} else {
+const loadDetalle = async () => {
+    try {
+        const data = await apiRequest(`torneos.php?id=${torneoId}`);
+        torneos = (data.torneos || []).map(mapTournament);
+        torneoIndex = torneos.findIndex(torneo => torneo.id === torneoId);
+        if (torneoIndex !== -1) {
+            const [databaseTeams, databaseMatches] = await Promise.all([
+                loadTeamsFromApi(torneoId),
+                loadMatchesFromApi(torneoId)
+            ]);
+            const names = new Map(databaseTeams.map(team => [Number(team.id), team.nombre || team.name]));
+            torneos[torneoIndex].teams = databaseTeams
+                .filter(team => team.nombre || team.name)
+                .map(team => ({ id: Number(team.id), name: team.nombre || team.name }));
+            torneos[torneoIndex].matches = databaseMatches.map(match => ({
+                teamA: names.get(Number(match.equipo_a)) || `Equipo ${match.equipo_a}`,
+                teamB: names.get(Number(match.equipo_b)) || `Equipo ${match.equipo_b}`,
+                scoreA: match.marcador_a,
+                scoreB: match.marcador_b,
+                playedAt: match.fecha_jugado
+            }));
+        }
+    } catch (error) {
+        torneos = getTorneos();
+        torneoIndex = torneos.findIndex(torneo => torneo.id === torneoId);
+    }
+
+    if (torneoIndex === -1) {
+        if (notFoundState) notFoundState.hidden = false;
+        return;
+    }
+
     // Completar campos que puedan faltar en torneos creados antes de este panel.
     const torneo = torneos[torneoIndex];
     const defaults = {
@@ -38,11 +67,24 @@ if (torneoIndex === -1) {
 
     if (detalleLayout) detalleLayout.hidden = false;
     initDetallePanel(torneo);
-}
+};
+
+loadDetalle();
 
 function persist(torneo) {
     torneos[torneoIndex] = torneo;
     saveTorneos(torneos);
+    if (window.getSession?.()?.role === 'organizador' || window.getSession?.()?.role === 'administrador') {
+        const matches = torneo.matches || (torneo.bracket || []).flat();
+        const teamIds = new Map((torneo.teams || []).map(team => [team.name, Number(team.id)]));
+        syncMatchesToApi(torneo.id, matches.map(match => ({
+            ronda: match.round || 'Ronda 1',
+            equipo_a: teamIds.get(match.teamA),
+            equipo_b: teamIds.get(match.teamB),
+            score_a: match.scoreA ?? null,
+            score_b: match.scoreB ?? null
+        })).filter(match => match.equipo_a && match.equipo_b)).catch(() => {});
+    }
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -635,7 +677,7 @@ function computeStandings(torneo) {
     return sortStandings(Array.from(table.values()), cfg);
 }
 
-function initDetallePanel(torneo) {
+async function initDetallePanel(torneo) {
     // Referencias que varias secciones necesitan; se asignan más abajo.
     let renderMatches = () => {};
     let renderStats = () => {};
@@ -643,6 +685,67 @@ function initDetallePanel(torneo) {
     let renderTV = () => {};
     let renderRegistration = () => {};
     let renderPlayers = () => {};
+
+    const session = window.getSession?.();
+    const requests = session?.role === 'participante'
+        ? await loadRequestsFromApi().catch(() => [])
+        : [];
+    const requestBox = document.getElementById('registrationRequestBox');
+    const requestStatus = document.getElementById('registrationRequestStatus');
+    const requestButton = document.getElementById('requestRegistrationBtn');
+
+    const participantRequest = session?.role === 'participante'
+        ? requests.find(request => Number(request.torneo_id) === torneo.id)
+        : null;
+    const participantPending = session?.role === 'participante' && participantRequest?.estado === 'pendiente';
+    const canManage = session?.role === 'administrador'
+        || (session?.role === 'organizador' && torneo.ownerEmail === session.email);
+
+    document.querySelector('.detalleAdminDivider')?.toggleAttribute('hidden', !canManage);
+    document.querySelector('.detalleNavAdmin')?.toggleAttribute('hidden', !canManage);
+    if (session?.role === 'participante' && requestBox) {
+        requestBox.hidden = false;
+        const renderRequest = () => {
+            const request = requests.find(item => Number(item.torneo_id) === torneo.id);
+            if (request?.estado === 'pendiente') {
+                requestStatus.textContent = 'Solicitud enviada, esperando aprobación del organizador.';
+                requestButton.hidden = true;
+                return;
+            }
+            if (request?.estado === 'aceptada') {
+                requestStatus.textContent = 'Solicitud aprobada. Ya estás inscripto en este torneo.';
+                requestButton.hidden = true;
+                return;
+            }
+            if (request?.estado === 'rechazada') {
+                requestStatus.textContent = 'La solicitud fue rechazada. Podés volver a solicitarla.';
+            } else {
+                requestStatus.textContent = 'Solicitá tu inscripción para participar.';
+            }
+            requestButton.hidden = false;
+        };
+
+        requestButton.addEventListener('click', async () => {
+            try {
+                await apiRequest('inscripciones.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ torneo_id: torneo.id })
+                });
+                requests.push({ torneo_id: torneo.id, estado: 'pendiente' });
+                renderRequest();
+            } catch (error) {
+                requestStatus.textContent = error.message;
+            }
+        });
+        renderRequest();
+    }
+
+    if (!canManage) {
+        document.querySelectorAll('[data-edit], #editNameBtn, #toggleStatusBtn, #deleteTorneoBtn, #addTeamBtn')
+            .forEach(element => { element.hidden = true; });
+        document.querySelectorAll('.detallePanel[data-panel^="admin-"] input, .detallePanel[data-panel^="admin-"] select, .detallePanel[data-panel^="admin-"] button')
+            .forEach(element => { element.disabled = true; });
+    }
 
     // Refresca todo lo que depende de equipos/resultados de una sola vez.
     const refreshAll = () => {
@@ -769,9 +872,10 @@ function initDetallePanel(torneo) {
     const onboardingCloseBtn = document.getElementById('onboardingCloseBtn');
 
     if (onboardingCard) {
-        onboardingCard.hidden = !!torneo.onboardingDismissed;
+        onboardingCard.hidden = !canManage || !!torneo.onboardingDismissed;
 
         document.querySelectorAll('.onboardingStep').forEach(step => {
+            if (!canManage) return;
             step.addEventListener('click', () => {
                 const target = step.dataset.onboarding;
                 if (target === 'share') {
@@ -944,10 +1048,19 @@ function initDetallePanel(torneo) {
     };
     renderStatus();
 
-    toggleStatusBtn.addEventListener('click', () => {
-        torneo.status = torneo.status === 'activo' ? 'borrador' : 'activo';
-        persist(torneo);
-        renderStatus();
+    toggleStatusBtn.addEventListener('click', async () => {
+        const estado = torneo.status === 'activo' ? 'planificado' : 'en_progreso';
+        try {
+            await apiRequest('torneos.php', {
+                method: 'PATCH',
+                body: JSON.stringify({ id_torneo: torneo.id, estado })
+            });
+            torneo.status = estado === 'en_progreso' ? 'activo' : 'borrador';
+            persist(torneo);
+            renderStatus();
+        } catch (error) {
+            window.alert(error.message);
+        }
     });
 
     const openConfirmDelete = () => {
@@ -1011,6 +1124,7 @@ function initDetallePanel(torneo) {
             input.type = 'text';
             input.className = 'authInput';
             input.value = team.name;
+            input.disabled = !canManage;
             input.addEventListener('change', () => {
                 const oldName = torneo.teams[idx].name;
                 const newName = input.value.trim() || `Team ${idx + 1}`;
@@ -1029,7 +1143,8 @@ function initDetallePanel(torneo) {
             removeBtn.className = 'teamRowRemove';
             removeBtn.setAttribute('aria-label', `Quitar ${team.name}`);
             removeBtn.textContent = '✕';
-            removeBtn.disabled = torneo.teams.length <= MIN_TEAMS;
+            removeBtn.disabled = torneo.teams.length <= MIN_TEAMS || !canManage;
+            removeBtn.hidden = !canManage;
             removeBtn.addEventListener('click', () => {
                 if (torneo.teams.length <= MIN_TEAMS) return;
                 const removed = torneo.teams[idx].name;
@@ -1083,9 +1198,11 @@ function initDetallePanel(torneo) {
         if (sets) input.max = String(cap);
         input.className = 'bracketScoreInput';
         input.value = match[scoreKey] != null ? match[scoreKey] : '';
+        input.disabled = !canManage;
         const teamName = match[scoreKey === 'scoreA' ? 'teamA' : 'teamB'];
         input.setAttribute('aria-label', `${sets ? 'Sets ganados' : 'Resultado'} de ${teamName}`);
         input.addEventListener('change', () => {
+            if (!canManage) return;
             const raw = input.value.trim();
             match[scoreKey] = raw === '' ? undefined : Math.max(0, Math.min(cap, parseInt(raw, 10) || 0));
             if (match[scoreKey] != null) input.value = match[scoreKey];
@@ -1408,9 +1525,14 @@ function initDetallePanel(torneo) {
             else renderLeague();
         }
         renderChampion();
+        if (!canManage) {
+            document.querySelectorAll('[data-panel="matches"] input, [data-panel="matches"] button')
+                .forEach(control => { control.disabled = true; });
+        }
     };
 
     generateBtn.addEventListener('click', () => {
+        if (!canManage) return;
         torneo.bracket = null;
         torneo.matches = null;
         torneo.de = null;
@@ -1516,6 +1638,10 @@ function initDetallePanel(torneo) {
     const scorersWrap = document.getElementById('scorersWrap');
     const scorersList = document.getElementById('scorersList');
 
+    if (playerNameInput) playerNameInput.disabled = !canManage;
+    if (playerTeamSelect) playerTeamSelect.disabled = !canManage;
+    if (addPlayerBtn) addPlayerBtn.hidden = !canManage;
+
     if (!Array.isArray(torneo.players)) torneo.players = [];
 
     const STAT_KEYS = ['goals', 'assists', 'yellow', 'red'];
@@ -1526,8 +1652,10 @@ function initDetallePanel(torneo) {
         input.min = '0';
         input.className = 'bracketScoreInput playerStatInput';
         input.value = player[key] || 0;
+        input.disabled = !canManage;
         input.setAttribute('aria-label', `${key} de ${player.name}`);
         input.addEventListener('change', () => {
+            if (!canManage) return;
             player[key] = Math.max(0, parseInt(input.value, 10) || 0);
             input.value = player[key];
             persist(torneo);
@@ -1577,8 +1705,11 @@ function initDetallePanel(torneo) {
             del.type = 'button';
             del.className = 'teamRowRemove';
             del.textContent = '✕';
+            del.disabled = !canManage;
+            del.hidden = !canManage;
             del.setAttribute('aria-label', `Quitar ${p.name}`);
             del.addEventListener('click', () => {
+                if (!canManage) return;
                 torneo.players.splice(idx, 1);
                 persist(torneo);
                 renderPlayers();
@@ -1605,6 +1736,7 @@ function initDetallePanel(torneo) {
     };
 
     const addPlayer = () => {
+        if (!canManage) return;
         const name = (playerNameInput.value || '').trim();
         const team = playerTeamSelect.value;
         if (!name || !team) return;
@@ -1683,6 +1815,7 @@ function initDetallePanel(torneo) {
     }
     if (registrationAddTeam) {
         registrationAddTeam.addEventListener('click', () => {
+            if (!canManage) return;
             addTeam();
             flashLabel(registrationAddTeam, 'Equipo agregado ✓', '+ Agregar equipo');
         });
@@ -1711,8 +1844,10 @@ function initDetallePanel(torneo) {
             const input = document.createElement('input');
             input.type = 'datetime-local';
             input.className = 'authInput schedulerInput';
+            input.disabled = !canManage;
             if (match.scheduledAt) input.value = match.scheduledAt;
             input.addEventListener('change', () => {
+                if (!canManage) return;
                 match.scheduledAt = input.value || undefined;
                 persist(torneo);
             });

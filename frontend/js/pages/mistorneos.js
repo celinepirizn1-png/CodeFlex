@@ -20,7 +20,8 @@ const INITIAL_VISIBLE = 2;
 const STEP = 2;
 let visibleCount = INITIAL_VISIBLE;
 
-const getTorneos = () => JSON.parse(localStorage.getItem('codeflexTorneos') || '[]');
+const getTorneos = () => loadTournamentsFromApi();
+const getSessionRequests = () => loadRequestsFromApi();
 
 const buildTorneoCard = (torneo) => {
     // Cada torneo es una unidad de contenido autónoma → <article>. La navegación
@@ -61,8 +62,16 @@ const buildTorneoCard = (torneo) => {
     return card;
 };
 
-const renderTorneos = (statusFilter) => {
-    const torneos = getTorneos();
+const renderTorneos = async (statusFilter) => {
+    const session = window.getSession?.();
+    const allTorneos = await getTorneos().catch(() => []);
+    const requests = await getSessionRequests().catch(() => []);
+    const approvedIds = new Set(requests
+        .filter(request => request.estado === 'aceptada')
+        .map(request => Number(request.torneo_id)));
+    const torneos = session?.role === 'participante'
+        ? allTorneos.filter(torneo => approvedIds.has(torneo.id))
+        : allTorneos.filter(torneo => !torneo.ownerEmail || torneo.ownerEmail === session?.email);
     const visible = statusFilter ? torneos.filter(t => t.status === statusFilter) : torneos;
 
     if (torneosCount) {
@@ -70,6 +79,16 @@ const renderTorneos = (statusFilter) => {
     }
 
     if (!torneos.length) {
+        const title = session?.role === 'participante'
+            ? 'Todavía no participás en ningún torneo'
+            : 'Todavía no creaste ningún torneo';
+        const text = session?.role === 'participante'
+            ? 'Cuando el organizador apruebe una solicitud, el torneo aparecerá acá.'
+            : 'Cuando crees tu primer torneo, aparecerá acá.';
+        const emptyTitle = document.getElementById('emptyStateTitle');
+        const emptyText = document.getElementById('emptyStateText');
+        if (emptyTitle) emptyTitle.textContent = title;
+        if (emptyText) emptyText.textContent = text;
         if (emptyState) emptyState.hidden = false;
         if (torneosGrid) torneosGrid.hidden = true;
         if (showMoreWrap) showMoreWrap.hidden = true;
