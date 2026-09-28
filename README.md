@@ -27,25 +27,40 @@ Instituto Tecnológico Superior "Arias - Balparda" (UTU) - 2026
 ## Estructura del proyecto
 
 ```
-codeflex-sgdm/
+CodeFlex/
 ├── backend/
-│   ├── config/          # Conexión a BD y configuración
-│   ├── controllers/     # Lógica de negocio
-│   ├── models/          # Clases POO (Usuario, Torneo, etc)
-│   ├── routes/          # Rutas y endpoints
-│   └── utils/           # Validaciones y helpers
+│   ├── api/                 # Endpoints de la API
+│   │   └── auth/            # Autenticación y sesiones
+│   ├── config/              # Conexión a BD y configuración
+│   ├── database/            # Estructura y configuración de la BD
+│   ├── models/              # Clases y modelos del sistema
+│   ├── repositories/        # Acceso y consultas a datos
+│   └── services/            # Lógica de negocio
+│
 ├── frontend/
-│   ├── css/
-│   ├── js/
-│   ├── img/
-│   └── pages/
-├── database/
-│   ├── scripts/         # DCL, usuarios de BD
-│   └── migrations/      # Modelo relacional (.sql)
+│   ├── css/                 # Estilos de la aplicación
+│   │   └── pages/           # Estilos específicos por página
+│   ├── html/                # Páginas HTML
+│   │   ├── login/           # Páginas para usuarios autenticados
+│   │   │   └── panel/       # Paneles según rol de usuario
+│   │   └── nologin/         # Páginas públicas y autenticación
+│   ├── img/                 # Imágenes y recursos gráficos
+│   └── js/                  # Lógica del frontend
+│       └── pages/           # Scripts específicos por página
+│
+├── docs/                    # Documentación del proyecto
+│   ├── funcional/           # Documentación funcional
+│   ├── manual_usuario/      # Manual de usuario
+│   ├── seguridad/           # Documentación de seguridad
+│   └── tecnica/             # Documentación técnica
+│
 ├── server/
-│   └── scripts/         # Scripts bash de AlmaLinux
-├── docs/                # Documentación funcional/técnica
-└── README.md
+│   └── scripts/             # Scripts de administración del servidor
+│
+└── uploads/                 # Archivos subidos por los usuarios
+    ├── equipos/             # Recursos de equipos
+    ├── perfiles/            # Recursos de perfiles
+    └── torneos/             # Recursos de torneos
 ```
 
 ## Módulos funcionales
