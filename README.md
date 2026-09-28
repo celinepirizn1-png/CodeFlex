@@ -10,9 +10,9 @@ Instituto Tecnológico Superior "Arias - Balparda" (UTU) - 2026
 | Integrante | Rol |
 |---|---|
 | Bryan Gómez| Backend Developer |
-| Aaron Sierra | (Diseñador y Documentador) |
-| Celine Píriz | (Lider y Frontend Developer) |
-| Santiago Espárrago | (Backend Developer) |
+| Aaron Sierra | Diseñador y Documentador |
+| Celine Píriz | (Lider y Frontend Developer |
+| Santiago Espárrago | Backend Developer |
 
 ## Stack tecnológico
 
@@ -23,7 +23,6 @@ Instituto Tecnológico Superior "Arias - Balparda" (UTU) - 2026
 - Control de versiones: Git / GitHub
 - Despliegue: Docker (entrega final)
 
-## Estructura del proyecto
 ## Estructura del proyecto
 
 ```
@@ -65,16 +64,16 @@ CodeFlex/
 
 ## Módulos funcionales
 
-- Usuarios y autenticación (roles: administrador, organizador, participante, público)
-- Gestión de participantes y equipos
-- Torneos: liga, eliminación directa, sistema suizo
-- Registro y consulta de resultados
-- Panel de administración
-- Consulta pública de calendarios y posiciones
+- Registro e inicio de sesión de usuarios.
+- Gestión de torneos en formatos de liga, eliminación directa y sistema suizo.
+- Administración de participantes y equipos.
+- Generación y consulta de partidos.
+- Registro de resultados y consulta de posiciones.
+- Paneles para administradores, organizadores y participantes.
 
 ## Instalación (en desarrollo)
 
-git clone https://github.com/TheCirax091/CODEFLEX.git
+git clone https://github.com/celinepirizn1-png/CodeFlex.git
 cd CODEFLEX
 
 Instrucciones de configuración de base de datos y servidor se agregarán conforme avance el desarrollo.
